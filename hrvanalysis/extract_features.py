@@ -6,6 +6,11 @@
 from typing import List, Tuple
 from collections import namedtuple
 import numpy as np
+import sys
+
+sys.path.append('/kaggle/working/cogload/install_library')
+from install_library import install_and_import
+install_and_import("nolds")
 import nolds
 from scipy import interpolate
 from scipy import signal
