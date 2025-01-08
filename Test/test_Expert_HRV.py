@@ -10,7 +10,7 @@ import warnings
 warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
-sys.path.append('/kaggle/working/cogload/ProcessData')
+sys.path.append('/kaggle/working/cogload/processData')
 from Expert_features import Expert_feature
 
 #argument parser
