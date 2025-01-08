@@ -61,7 +61,8 @@ expert = Expert_feature(temp_df = temp_df,
                         label_df = label_df,
                         window_size = args.window_size,
                         normalize = args.normalize)
-hrv = expert.get_hrv_features()
+# hrv = expert.get_hrv_features() ''' HRV features by hrv-analysis library '''
+hrv = expert.extract_HRV_features()
 print('HRV',hrv.shape)
 print('HRV columns',hrv.columns)
 #save the features
