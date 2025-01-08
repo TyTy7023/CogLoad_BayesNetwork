@@ -10,7 +10,7 @@ install_and_import("hrv-analysis")
 from hrvanalysis import get_time_domain_features, get_csi_cvi_features, get_frequency_domain_features, \
     get_geometrical_features, get_poincare_plot_features
 
-sys.path.append('/kaggle/working/cogload/ProcessData')
+sys.path.append('/kaggle/working/cogload/processData')
 from Processing_Data import Preprocessing
 
 ''' HRV functions '''
