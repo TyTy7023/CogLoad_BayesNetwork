@@ -65,7 +65,7 @@ class Expert_feature(Preprocessing):
             warnings.filterwarnings("ignore", category=UserWarning)
             hrv = self.get_all_hrv_features(correct_rrs[i])
             hrv = hrv.drop(['mean_hr', 'max_hr', 'min_hr', 'std_hr', 'tinn'], axis=1)
-            hrv.columns = ['hrv__' + c for c in hrv.columns]
+            hrv.columns = ['hrv_' + c for c in hrv.columns]
             warnings.filterwarnings("default", category=UserWarning)
             hrv_list.append(hrv)
         return pd.concat(hrv_list, axis=0, ignore_index=True).agg(list)
