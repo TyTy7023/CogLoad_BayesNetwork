@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
 sys.path.append('/kaggle/working/cogload/ProcessData/')
-from ProcessData import Expert_features
+from Expert_features import Expert_feature
 
 #argument parser
 parser = ArgumentParser()
