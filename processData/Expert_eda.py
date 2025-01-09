@@ -81,7 +81,7 @@ class eda():
         Extract EDA features using PyTeAP library
         '''
         # EDA features to extract from PyTeAP library
-        hz = len(self.gsr_df.loc[i]) * self.num_hz
+        hz = len(self.gsr_df.loc[0]) * self.num_hz
         eda = []
         for i in range(len(self.gsr_df)):
             resample_intervals = resample(self.gsr_df.loc[i], int(hz))
