@@ -55,7 +55,11 @@ print('RR',rr_df.shape)
 
 #Expert features
 expert = eda(gsr_df, 10)
-eda_features = expert.eda_features
+eda_features = expert.eda_features_nk
+print('EDA features:',eda_features.shape)
+print('EDA columns:',eda_features.columns)
+
+eda_features = expert.eda_features_pyteap
 print('EDA features:',eda_features.shape)
 print('EDA columns:',eda_features.columns)
 

@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
+import pickle
+from tqdm import tqdm
 from scipy.signal import resample
+import os
 import warnings
 import sys
 
@@ -9,13 +12,17 @@ sys.path.append('/kaggle/working/cogload/install_library')
 from install_library import install_and_import
 install_and_import("neurokit2")
 
+sys.path.append('/kaggle/working/cogload/pyteap')
+from gsr import acquire_gsr, get_gsr_features
+
 import neurokit2 as nk
 
 class eda():
     def __init__(self, gsr_df, num_hz):
         self.num_hz = num_hz
         self.gsr_df = gsr_df
-        self.eda_features = self.extract_eda_features()
+        self.eda_features_nk = self.extract_eda_features()
+        self.eda_features_pyteap = self.expert_eda_features()
     
     ''' EDA functions
     At the moment, we have 2 ways to extract EDA features:
@@ -29,7 +36,8 @@ class eda():
         '''
         Save EDA features to path
         '''
-        self.eda_features.to_csv(path + 'eda_features.csv', index=False)
+        self.eda_features_nk.to_csv(path + 'eda_features_nk.csv', index=False)
+        self.eda_features_pyteap.to_csv(path + 'eda_features_pyteap.csv', index=False)
     
     def extract_eda_features(self):
         """
@@ -65,4 +73,19 @@ class eda():
 
         # Process all segments and construct DataFrame
         features_arr = [process_segment(self.gsr_df.iloc[i].values) for i in range(len(self.gsr_df))]
+        return pd.DataFrame(features_arr, columns=feature_names)
+    
+    ''' EDA functions with PyTeAP library'''
+    def expert_eda_features(self):
+        '''
+        Extract EDA features using PyTeAP library
+        '''
+        # EDA features to extract from PyTeAP library
+        hz = len(self.gsr_df.loc[i]) * self.num_hz
+        eda = []
+        for i in range(len(self.gsr_df)):
+            resample_intervals = resample(self.gsr_df.loc[i], int(hz))
+            eda.append(acquire_gsr(resample_intervals, int(hz)))
+        feature_names = ['peaks_per_sec', 'mean_amp', 'mean_risetime', 'mean_gsr', 'std_gsr']
+        features_arr = [get_gsr_features(eda[i], int(hz)) for i in range(len(eda))]
         return pd.DataFrame(features_arr, columns=feature_names)
