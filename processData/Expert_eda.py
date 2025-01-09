@@ -86,7 +86,6 @@ class eda():
         for i in range(len(self.gsr_df)):
             resample_intervals = resample(self.gsr_df.loc[i], int(hz))
             resample_intervals = pd.Series(resample_intervals)
-            eda.append(pd.Series(acquire_gsr(resample_intervals, int(hz))))
         feature_names = ['peaks_per_sec', 'mean_amp', 'mean_risetime', 'mean_gsr', 'std_gsr']
         features_arr = [get_gsr_features(eda[i], int(hz)) for i in range(len(eda))]
         return pd.DataFrame(features_arr, columns=feature_names)
