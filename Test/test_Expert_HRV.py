@@ -54,7 +54,7 @@ print('GSR',gsr_df.shape)
 print('RR',rr_df.shape)
 
 #Expert features
-expert = HRV(temp_df = temp_df,
+expert = HRV(temp_df = temp_df = temp_df,
                         hr_df = hr_df,
                         gsr_df = gsr_df,
                         rr_df = rr_df,
