@@ -58,7 +58,7 @@ class eda():
         features_arr = []
         for i in range(len(self.gsr_df)):
             # Process it
-            signals, info = nk.eda_process(self.resample_intervals, sampling_rate=self.num_hz)
+            signals, info = nk.eda_process(self.resample_intervals[i], sampling_rate=self.num_hz)
 
             segment_features = []
             for k in feature_keys:
