@@ -8,33 +8,58 @@ sys.path.append('/kaggle/working/cogload/install_library')
 from install_library import install_and_import
 install_and_import("neurokit2")
 install_and_import("hrv-analysis")
+
 import neurokit2 as nk
 from hrvanalysis import get_time_domain_features, get_csi_cvi_features, get_frequency_domain_features, \
     get_geometrical_features, get_poincare_plot_features
 
-sys.path.append('/kaggle/working/cogload/processData')
-from processing_Data import Preprocessing
-
-''' HRV functions '''
+''' HRV functions
+    At the moment, we have 2 ways to extract HRV features:
+    1. Using hrv-analysis library
+        We have 5 functions to extract HRV features: 
+            get_time_domain_features
+            get_csi_cvi_features
+            get_frequency_domain_features
+            get_geometrical_features
+            get_poincare_plot_features
+        Extract HRV features from RR intervals data (in ms) to 26 features
+    2. Using neurokit2 library
+        We extract HRV features from RR intervals data (in ms) to all features in neurokit2 library
+        Then, we select the features which are not NaN in all 30-second RR intervals data
+    '''
 HRV_FUNCTIONS = [get_time_domain_features, get_csi_cvi_features,
                  lambda x: get_frequency_domain_features(x, sampling_frequency=1),
                  get_geometrical_features, get_poincare_plot_features]
 
-class Expert_feature(Preprocessing):
-    def __init__(self, temp_df, hr_df, gsr_df, rr_df, label_df, window_size = 1, normalize = "Standard", data_type='', num_hz = 10):
-        super().__init__(temp_df, hr_df, gsr_df, rr_df, label_df, window_size, normalize, data_type)
-        self.num_hz = num_hz
-        self.stat_feat_all = None
-        self.stat_feat_after = pd.concat([temp_df, hr_df, gsr_df, rr_df],axis=1)
+class HRV():
+    def __init__(self, rr_df):
+        self.rr_df = rr_df
+        self.hrv_features_nk = self.extract_HRV_features()
+        self.hrv_features_analysis = self.get_hrv_features()
 
-    def resample_eda(self):
+    def save_hrv_features(self, path):
         '''
-        Resample GSR data to the same length as HR data
+        Save HRV features to path
         '''
-        # Resample GSR data to the same length as HR data
-        gsr_resampled = resample(self.gsr_df.values, len(self.hr_df) * self.num_hz, axis=0)
-        gsr_resampled = pd.DataFrame(gsr_resampled, columns=self.gsr_df.columns)
-        return gsr_resampled
+        self.hrv_features_nk.to_csv(path + 'hrv_features_nk.csv', index=False)
+        self.hrv_features_analysis.to_csv(path + 'hrv_features_analysis.csv', index=False)
+
+    def get_hrv_features(self):
+        '''
+        Get HRV features
+        '''
+        # get correct rr intervals in ms
+        correct_rrs = self.rr_df.values * 1000
+        hrv_list = []
+        for i in range(len(correct_rrs)):
+            # get hrv variables
+            warnings.filterwarnings("ignore", category=UserWarning)
+            hrv = self.get_all_hrv_features(correct_rrs[i])
+            hrv = hrv.drop(['mean_hr', 'max_hr', 'min_hr', 'std_hr', 'tinn'], axis=1)
+            hrv.columns = ['hrv_' + c for c in hrv.columns]
+            warnings.filterwarnings("default", category=UserWarning)
+            hrv_list.append(hrv)
+        return pd.concat(hrv_list, axis=0, ignore_index=True).agg(list)
     
     def get_all_hrv_features(self, ibis):
         """
@@ -54,26 +79,6 @@ class Expert_feature(Preprocessing):
         # Gộp các DataFrame lại
         result = pd.concat(dataframes, axis=1)
         return result
-
-    def get_hrv_features(self):
-        '''
-        Get HRV features
-        '''
-        # get correct rr intervals in ms
-        correct_rrs = self.rr_df.values * 1000
-        hrv_list = []
-        for i in range(len(correct_rrs)):
-            # get hrv variables
-            warnings.filterwarnings("ignore", category=UserWarning)
-            hrv = self.get_all_hrv_features(correct_rrs[i])
-            hrv = hrv.drop(['mean_hr', 'max_hr', 'min_hr', 'std_hr', 'tinn'], axis=1)
-            hrv.columns = ['hrv_' + c for c in hrv.columns]
-            warnings.filterwarnings("default", category=UserWarning)
-            hrv_list.append(hrv)
-        return pd.concat(hrv_list, axis=0, ignore_index=True).agg(list)
-
-    
-
 
     def extract_HRV_features(self):
         feature_names = ['HRV_RMSSD', 'HRV_MeanNN', 'HRV_SDNN', 'HRV_SDSD', 'HRV_CVNN',

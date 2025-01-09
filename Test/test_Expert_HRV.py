@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
 sys.path.append('/kaggle/working/cogload/processData')
-from Expert_features import Expert_feature
+from Expert_HRV import HRV
 
 #argument parser
 parser = ArgumentParser()
@@ -54,16 +54,18 @@ print('GSR',gsr_df.shape)
 print('RR',rr_df.shape)
 
 #Expert features
-expert = Expert_feature(temp_df = temp_df,
+expert = HRV(temp_df = temp_df,
                         hr_df = hr_df,
                         gsr_df = gsr_df,
                         rr_df = rr_df,
                         label_df = label_df,
                         window_size = args.window_size,
                         normalize = args.normalize)
-# hrv = expert.get_hrv_features() ''' HRV features by hrv-analysis library '''
-hrv = expert.extract_HRV_features()
-print('HRV',hrv.shape)
-print('HRV columns',hrv.columns)
+
+print('\nHRV neroukit', expert.hrv_features_nk)
+print('HRV columns', expert.hrv_features_nk.columns)
+print('\nHRV analysis', expert.hrv_features_analysis)
+print('HRV columns', expert.hrv_features_analysis.columns)
+
 #save the features
-hrv.to_csv('/kaggle/working/hrv.csv',index=False)
+expert.save_hrv_features(path = directory_name)
