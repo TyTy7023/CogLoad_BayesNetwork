@@ -31,7 +31,7 @@ class eda():
         Save EDA features to path
         '''
         self.eda_features.to_csv(path + 'eda_features.csv', index=False)
-        
+
     def resample_eda(self):
         '''
         Resample GSR data to the same length as HR data
@@ -58,7 +58,7 @@ class eda():
         features_arr = []
         for i in range(len(self.gsr_df)):
             # Process it
-            signals, info = nk.eda_process(self.resample_intervals, sampling_rate=10)
+            signals, info = nk.eda_process(self.resample_intervals, sampling_rate=self.num_hz)
 
             segment_features = []
             for k in feature_keys:
