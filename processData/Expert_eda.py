@@ -37,7 +37,7 @@ class eda():
         Resample GSR data to the same length as HR data
         '''
         # Resample GSR data to the same length as HR data
-        gsr_resampled = resample(self.gsr_df.values, len(self.gsr_df) * self.num_hz, axis=0)
+        gsr_resampled = resample(self.gsr_df.values, len(self.gsr_df) * self.num_hz)
         return gsr_resampled
     
     def extract_eda_features(self):
