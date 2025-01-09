@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
 sys.path.append('/kaggle/working/cogload/processData')
-from Expert_features import Expert_feature
+from Expert_eda import eda
 
 #argument parser
 parser = ArgumentParser()
@@ -54,16 +54,10 @@ print('GSR',gsr_df.shape)
 print('RR',rr_df.shape)
 
 #Expert features
-expert = Expert_feature(temp_df = temp_df,
-                        hr_df = hr_df,
-                        gsr_df = gsr_df,
-                        rr_df = rr_df,
-                        label_df = label_df,
-                        window_size = args.window_size,
-                        normalize = args.normalize)
-# hrv = expert.get_hrv_features() ''' HRV features by hrv-analysis library '''
-hrv = expert.extract_HRV_features()
-print('HRV',hrv.shape)
-print('HRV columns',hrv.columns)
+expert = eda(gsr_df, 10)
+eda_features = expert.eda_features
+print('EDA features:',eda_features.shape)
+print('EDA columns:',eda_features.columns)
+
 #save the features
-hrv.to_csv('/kaggle/working/hrv.csv',index=False)
+expert.save_eda_features(directory_name)
