@@ -4,7 +4,6 @@ from sklearn.svm import SVC
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.pipeline import Pipeline
 import optuna
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 class ESVM:
@@ -13,14 +12,16 @@ class ESVM:
         self.best_params = None
 
     def build(self, config):
-        # Tạo pipeline với PCA, SVC và AdaBoost
+    # Tạo pipeline với PCA và AdaBoost
         pipeline = Pipeline([
-            ('pca', PCA(n_components=config['pca__n_components'])),
-            ('svc', SVC(probability=True, random_state=42)),
-            ('adaboost', AdaBoostClassifier(base_estimator=SVC(probability=True), random_state=42))
+            ('pca', PCA(n_components=config['pca__n_components'])),  # PCA
+            ('adaboost', AdaBoostClassifier(
+                base_estimator=SVC(probability=True, kernel=config['svc__kernel'], C=config['svc__C'], gamma=config['svc__gamma'], random_state=42),
+                n_estimators=config['adaboost__n_estimators'],
+                learning_rate=config['adaboost__learning_rate'],
+                random_state=42
+            ))
         ])
-
-        pipeline.set_params(**config)
         return pipeline
 
     def training(self, trial, X_train, y_train):
