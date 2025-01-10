@@ -13,6 +13,8 @@ import sys
 sys.path.append('/kaggle/working/cogload/processData')
 from processing_Data import Preprocessing
 
+sys.path.append('/kaggle/working/cogload/Model')
+
 #argument parser
 parser = ArgumentParser()
 parser.add_argument("--data_folder_path", default = "/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/", type = str, help = "Path to the data folder")
@@ -26,9 +28,9 @@ parser.add_argument("--floating", default = True, type = bool, help = "True to u
 # parser.add_argument("--split", nargs='+', default=[1] , type=int, help="the split of data example 2 6 to split data into 2 and 6 to extract feature")
 parser.add_argument("--estimator_RFECV", default='SVM', type=str, help="model for RFECV")
 parser.add_argument("--debug", default = 0, type = int, help="debug mode 0: no debug, 1: debug")
-# parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
-# parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
-parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
+parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
+parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
+# parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
 parser.add_argument("--expert_lib",default='None' , type=str, help=" is the library used to extract expert features (None, 'nk', 'analysis_pyteap', 'HRV_nk', 'HRV_analysis', 'EDA_nk', 'pyteap', 'both')")
 
 args = parser.parse_args()
@@ -70,6 +72,31 @@ print(f'X_train: {X_train.shape}, columns: {X_train.columns}')
 print(f'X_test: {X_test.shape}, columns: {X_test.columns}')
 
 X_train.to_csv('/kaggle/working/log/X_train.csv', index=False)
+
+if len(args.models_single) > 0:
+    from single_model import train_model as single_model
+    single_model(X_train = X_train, 
+                 y_train = y_train, 
+                 X_test = X_test, 
+                 y_test = y_test, 
+                 user_train = user_train,
+                 directory_name = directory_name, 
+                 n_splits = args.GroupKFold, 
+                 debug = args.debug, 
+                 models = args.models_single)
+    
+if len(args.models_mul) > 0:
+    from mul_model import train_model as multi_model
+    multi_model(X_train = X_train, 
+                y_train = y_train, 
+                X_test = X_test, 
+                y_test = y_test, 
+                user_train = user_train,
+                directory_name = directory_name, 
+                n_splits = args.GroupKFold, 
+                debug = args.debug, 
+                models = args.models_mul)
+    
 
 
 

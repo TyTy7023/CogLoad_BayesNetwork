@@ -17,21 +17,13 @@ from sklearn.ensemble import RandomForestClassifier as RF
 from sklearn.ensemble import AdaBoostClassifier as AB
 from sklearn.ensemble import GradientBoostingClassifier as GB
 from sklearn.svm import SVC
-from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
 
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 import sys
-sys.path.append('/kaggle/working/cogload/Model')
-from E7GB import EnsembleModel_7GB
-
-sys.path.append('/kaggle/working/cogload/Exploratory_Data')
+sys.path.append('/kaggle/working/cogload/')
 from EDA import EDA
 
-def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['ESVM','E7GB', 'MLP', 'LR', 'LDA', 'KNN', 'RF', 'AB', 'GB', 'SVM', 'XGB']):
+def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['LR', 'LDA', 'KNN', 'RF', 'AB', 'GB', 'SVM', 'XGB']):
     np.random.seed(42)
     path = os.path.dirname(path)
     path_EDA = path + '/EDA/'
@@ -70,24 +62,13 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
             print(f'User of train_fold({fold}) : {np.unique(train_groups)}')
             print(f'User of val_fold({fold}) :{np.unique(val_groups)}')    
 
-            if model == 'E7GB':
-                estimator = useModel(model)
-            else:
-                estimator, param_grid = useModel(model) 
+            estimator, param_grid = useModel(model) 
             
-            if model != 'E7GB' and model != 'ESVM':
-                grid_search = GridSearchCV(estimator=estimator, param_grid=param_grid, cv=GroupKFold(n_splits=3), scoring='accuracy', verbose=1)
-                grid_search.fit(X_train_fold, y_train_fold, groups = train_groups)
-                
-                y_val_pred = grid_search.predict(X_val_fold)
-                y_pred_prob = grid_search.predict_proba(X_val_fold)[:,1]
-
-            else:
-                estimator.fit(X_train_fold, y_train_fold)
-                y_val_pred = estimator.predict(X_val_fold)
-                y_pred_prob = estimator.predict_proba(X_val_fold)
-                if model == 'ESVM':
-                    y_pred_prob = y_pred_prob[:,1]
+            grid_search = GridSearchCV(estimator=estimator, param_grid=param_grid, cv=GroupKFold(n_splits=3), scoring='accuracy', verbose=1)
+            grid_search.fit(X_train_fold, y_train_fold, groups = train_groups)
+            
+            y_val_pred = grid_search.predict(X_val_fold)
+            y_pred_prob = grid_search.predict_proba(X_val_fold)[:,1]
 
             y_pred_vals.append(y_pred_prob)
             accuracy = accuracy_score(y_val_fold, y_val_pred)
@@ -98,26 +79,17 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
 
             if accuracy > best_score:
                 best_score = accuracy
-                if model != 'E7GB' and model != 'ESVM':
-                    best_model = grid_search
-                else:
-                    best_model = estimator
+                best_model = grid_search
 
         # ROC tâp validation K-Fold
         EDA.draw_ROC(path_EDA + "/models/", y_vals, y_pred_vals, model)
 
         # Dự đoán trên tập kiểm tra
-        if model == 'ESVM':
-            print(f"Best parameters found: {useModel(model)[1]}\n")
-        else:
-            print(f"Best parameters found: {best_model.best_params_}\n")
+        print(f"Best parameters found: {best_model.best_params_}\n")
         y_pred = best_model.predict(X_test)
         y_pred_proba = best_model.predict_proba(X_test)
 
-        if model == 'E7GB':
-            y_pred_tests.append(y_pred_proba)
-        else: 
-            y_pred_tests.append(y_pred_proba[:, 1])
+        y_pred_tests.append(y_pred_proba[:, 1])
 
         # Đánh giá mô hình trên tập kiểm tra
         acc = accuracy_score(y_test, y_pred)
@@ -141,7 +113,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
         log_results.append({
             "model": model,
             "accuracy": f"{acc} +- {accuracy_all.std()}",
-            "best_model": best_model.best_params_ if model != "ESVM" else  useModel(model)[1],
+            "best_model": best_model.best_params_ ,
             "f1_score": f1Score,
             "confusion_matrix": conf_matrix
         })
@@ -220,25 +192,7 @@ def useModel(model):
             'colsample_bytree': [0.8, 1.0],  # Subsample ratio of columns when constructing each tree
             'gamma': [0, 0.1, 0.2]           # Minimum loss reduction required to make a further partition on a leaf node of the tree
         }
-    elif model == 'E7GB':
-        estimator = EnsembleModel_7GB()
-    elif model == 'MLP':
-        estimator = MLPClassifier(random_state=42)
-        param_grid = {
-            'hidden_layer_sizes': [(100,), (50, 50), (100, 100)],  # Số lượng nơ-ron ẩn trong mỗi layer
-            'activation': ['relu', 'tanh', 'logistic'],              # Hàm kích hoạt
-            'solver': ['adam', 'sgd'],                                # Thuật toán tối ưu
-            'alpha': [0.0001, 0.001, 0.01],                           # L2 penalty (regularization term) parameter
-            'learning_rate': ['constant', 'invscaling', 'adaptive']   # Phương pháp cập nhật learning rate
-        }
-    elif model == 'ESVM':
-        base_estimator = SVC(probability=True, random_state=42)
-        estimator = AB(base_estimator=base_estimator, n_estimators=10, random_state=42)
-        param_grid = estimator.get_params()
     else:
-        raise ValueError("Model not found")
-
-    if model == 'E7GB':
-        return estimator
-    else:
-        return estimator, param_grid
+        raise ValueError(f"Model {model} is not supported")
+    return estimator, param_grid
+        
