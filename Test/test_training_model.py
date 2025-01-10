@@ -80,7 +80,7 @@ if len(args.models_single) > 0:
                  X_test = X_test, 
                  y_test = y_test, 
                  user_train = user_train,
-                 directory_name = directory_name, 
+                 path = directory_name, 
                  n_splits = args.GroupKFold, 
                  debug = args.debug, 
                  models = args.models_single)
@@ -92,7 +92,7 @@ if len(args.models_mul) > 0:
                 X_test = X_test, 
                 y_test = y_test, 
                 user_train = user_train,
-                directory_name = directory_name, 
+                path = directory_name, 
                 n_splits = args.GroupKFold, 
                 debug = args.debug, 
                 models = args.models_mul)
