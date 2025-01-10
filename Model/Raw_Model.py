@@ -29,7 +29,7 @@ sys.path.append('/kaggle/working/cogload/Model')
 from E7GB import EnsembleModel_7GB
 
 sys.path.append('/kaggle/working/cogload/Exploratory_Data')
-from Exploratory_Data import EDA
+from EDA import EDA
 
 def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['ESVM','E7GB', 'MLP', 'LR', 'LDA', 'KNN', 'RF', 'AB', 'GB', 'SVM', 'XGB']):
     np.random.seed(42)
