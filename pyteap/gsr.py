@@ -35,10 +35,8 @@ def get_gsr_features(gsr, sr):
     peaks_per_sec = (n_peaks * sr) / len(gsr)
     mean_amp = np.nanmax([np.mean(amp_peaks), 0])
     mean_risetime = np.nanmax([np.mean(rise_time), 0])
-    mean_gsr = np.mean(gsr)
-    std_gsr = np.std(gsr, ddof=1)
 
-    return [peaks_per_sec, mean_amp, mean_risetime, mean_gsr, std_gsr]
+    return [peaks_per_sec, mean_amp, mean_risetime]
 
 
 def acquire_gsr(sig, sr, conversion=False):
