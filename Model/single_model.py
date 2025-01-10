@@ -20,7 +20,7 @@ from sklearn.svm import SVC
 from xgboost import XGBClassifier
 
 import sys
-sys.path.append('/kaggle/working/cogload/')
+sys.path.append('/kaggle/working/cogload/Exploratory_Data')
 from EDA import EDA
 
 def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['LR', 'LDA', 'KNN', 'RF', 'AB', 'GB', 'SVM', 'XGB']):
