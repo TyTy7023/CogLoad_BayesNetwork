@@ -63,4 +63,11 @@ preprocessing = Preprocessing(temp_df = temp_df,
                               window_size = args.window_size, 
                               normalize = args.normalize, 
                               expert_lib= args.expert_lib)
+X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
+
+print(f'X_train: {X_train.shape}, columns: {X_train.columns}')
+print(f'X_test: {X_test.shape}, columns: {X_test.columns}')
+
+X_train.to_csv('/kaggle/working/log/X_train.csv', index=False)
+
 
