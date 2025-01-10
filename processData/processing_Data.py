@@ -116,23 +116,18 @@ class Preprocessing :
         self.stat_feat_after = self.stat_feat_all
 
     def expert_features(self):
-        # Định nghĩa ánh xạ từ expert_lib đến danh sách các DataFrame
         lib_to_features = {
-            'nk': [self.stat_feat_all, self.HRV.hrv_features_nk, self.EDA.eda_features_nk],
-            'analysis_pyteap': [self.stat_feat_all, self.HRV.hrv_features_analysis, self.EDA.eda_features_pyteap],
-            'HRV_nk': [self.stat_feat_all, self.HRV.hrv_features_nk],
-            'HRV_analysis': [self.stat_feat_all, self.HRV.hrv_features_analysis],
-            'EDA_nk': [self.stat_feat_all, self.EDA.eda_features_nk],
-            'pyteap': [self.stat_feat_all, self.EDA.eda_features_pyteap],
-            'both': [self.stat_feat_all, self.HRV.hrv_features_nk, self.HRV.hrv_features_analysis,
-                    self.EDA.eda_features_nk, self.EDA.eda_features_pyteap]
+            'nk': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_nk.reset_index(drop=True), self.EDA.eda_features_nk.reset_index(drop=True)],
+            'analysis_pyteap': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_analysis.reset_index(drop=True), self.EDA.eda_features_pyteap.reset_index(drop=True)],
+            'HRV_nk': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_nk.reset_index(drop=True)],
+            'HRV_analysis': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_analysis.reset_index(drop=True)],
+            'EDA_nk': [self.stat_feat_all.reset_index(drop=True), self.EDA.eda_features_nk.reset_index(drop=True)],
+            'pyteap': [self.stat_feat_all.reset_index(drop=True), self.EDA.eda_features_pyteap.reset_index(drop=True)],
+            'both': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_nk.reset_index(drop=True),
+                    self.HRV.hrv_features_analysis.reset_index(drop=True), self.EDA.eda_features_nk.reset_index(drop=True), self.EDA.eda_features_pyteap.reset_index(drop=True)]
         }
         
-        # Lấy danh sách DataFrame cần concat dựa trên expert_lib
-        # Nếu không tìm thấy, chỉ sử dụng self.stat_feat_all
-        feature_list = lib_to_features.get(self.expert_lib, [self.stat_feat_all])
-        
-        # Ghép nối các DataFrame
+        feature_list = lib_to_features.get(self.expert_lib, [self.stat_feat_all.reset_index(drop=True)])
         self.stat_feat_after = pd.concat(feature_list, axis=1)
 
 
