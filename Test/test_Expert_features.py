@@ -13,6 +13,8 @@ import sys
 sys.path.append('/kaggle/working/cogload/processData')
 from processing_Data import Preprocessing
 
+sys.path.append('/kaggle/working/cogload/Model')
+from Raw_Model import train_model
 #argument parser
 parser = ArgumentParser()
 parser.add_argument("--data_folder_path", default = "/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/", type = str, help = "Path to the data folder")
@@ -28,6 +30,7 @@ parser.add_argument("--estimator_RFECV", default='SVM', type=str, help="model fo
 parser.add_argument("--debug", default = 0, type = int, help="debug mode 0: no debug, 1: debug")
 # parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
 # parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
+parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
 parser.add_argument("--expert_lib",default='None' , type=str, help=" is the library used to extract expert features (None, 'nk', 'analysis_pyteap', 'HRV_nk', 'HRV_analysis', 'EDA_nk', 'pyteap', 'both')")
 
 args = parser.parse_args()
@@ -69,5 +72,15 @@ print(f'X_train: {X_train.shape}, columns: {X_train.columns}')
 print(f'X_test: {X_test.shape}, columns: {X_test.columns}')
 
 X_train.to_csv('/kaggle/working/log/X_train.csv', index=False)
+
+train_model(X_train = X_train, 
+            y_train = y_train, 
+            X_test = X_test, 
+            y_test = y_test, 
+            user_train = user_train, 
+            path = directory_name, 
+            n_splits=args.GroupKFold , 
+            debug = args.debug, 
+            models = args.models)
 
 

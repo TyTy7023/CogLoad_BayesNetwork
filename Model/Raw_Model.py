@@ -20,6 +20,7 @@ from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
 
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -232,8 +233,10 @@ def useModel(model):
         }
     elif model == 'ESVM':
         base_estimator = SVC(probability=True, random_state=42)
-        estimator = AdaBoostClassifier(base_estimator=base_estimator, n_estimators=10, random_state=42)
+        estimator = AB(base_estimator=base_estimator, n_estimators=10, random_state=42)
         param_grid = estimator.get_params()
+    else:
+        raise ValueError("Model not found")
 
     if model == 'E7GB':
         return estimator
