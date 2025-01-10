@@ -129,6 +129,8 @@ class Preprocessing :
         
         feature_list = lib_to_features.get(self.expert_lib, [self.stat_feat_all.reset_index(drop=True)])
         self.stat_feat_after = pd.concat(feature_list, axis=1)
+        # export file
+        self.stat_feat_after.to_csv('/kaggle/working/log/all_features.csv', index=False)
 
 
     #  Remove features from the data
