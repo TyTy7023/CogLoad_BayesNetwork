@@ -84,9 +84,6 @@ class eda():
         eda = []
         for i in range(len(self.gsr_df)):
             eda.append(pd.Series(acquire_gsr(self.gsr_df.loc[i], 1)))
-        print(eda[1])
-        print(self.gsr_df.loc[i])
-
         feature_names = ['peaks_per_sec', 'mean_amp', 'mean_risetime', 'mean_gsr', 'std_gsr']
         features_arr = [get_gsr_features(eda[i], 1) for i in range(len(eda))]
         return pd.DataFrame(features_arr, columns=feature_names)
