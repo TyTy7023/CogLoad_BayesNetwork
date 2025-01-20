@@ -85,7 +85,6 @@ class process3D_Data(Preprocessing):
                 self.SMA()
             self.extract_features()
         
-        self.expert_features()
         self.stat_feat_after = np.stack((self.temp_stat_features, self.hr_stat_features, self.gsr_stat_features, self.rr_stat_features), axis=-1)
         self.splits_train_test()
         self.X_train, self.X_test = self.normalize_data(self.X_train, self.X_test)
