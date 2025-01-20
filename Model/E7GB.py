@@ -6,6 +6,10 @@ class EnsembleModel_7GB():
         self.lg_models = {}
         self.n_models = n_models
         self.num_boost_round = num_boost_round
+        self.best_params = None
+        self.best_params_ = None
+
+
     def fit(self, X, y):
         params = {}
         
@@ -51,6 +55,9 @@ class EnsembleModel_7GB():
             train_data = lg.Dataset(X, y)
         
             self.lg_models[i] = lg.train(params[i], train_data, num_boost_round=self.num_boost_round)
+
+        self.best_params = params
+        self.best_model = self.lg_models
 
     def predict_proba(self, X):
         #print(X.shape)
