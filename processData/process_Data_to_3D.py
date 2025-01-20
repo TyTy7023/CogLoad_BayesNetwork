@@ -6,7 +6,7 @@ import sys
 sys.path.append('/kaggle/working/cogload/processData/')
 from processing_Data import Preprocessing
 
-class processCNN(Preprocessing):
+class process3D_Data(Preprocessing):
     def __init__(self, temp_df, hr_df, gsr_df, rr_df, label_df, window_size = 1, normalize = "Standard", expert_lib='None'):
         super().__init__(temp_df, hr_df, gsr_df, rr_df, label_df, window_size, normalize, expert_lib)
 
