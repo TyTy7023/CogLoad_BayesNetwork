@@ -13,6 +13,9 @@ import sys
 sys.path.append('/kaggle/working/cogload/processData')
 from processing_Data import Preprocessing
 
+sys.path.append('/kaggle/working/cogload/Model')
+from WGLR import WeightedRegression
+
 #argument parser
 parser = ArgumentParser()
 parser.add_argument("--data_folder_path", default = "/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/", type = str, help = "Path to the data folder")
@@ -65,7 +68,6 @@ preprocessing = Preprocessing(temp_df = temp_df,
                               normalize = args.normalize, 
                               expert_lib= args.expert_lib)
 X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove='None')
-
 
 # Example usage:
 # Initialize and fit the model
