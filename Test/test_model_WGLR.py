@@ -4,6 +4,7 @@ import ast
 from datetime import datetime
 #data analysis and manipulation library
 import pandas as pd
+import numpy as np
 from argparse import ArgumentParser
 
 import warnings
