@@ -12,6 +12,7 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 import sys
 sys.path.append('/kaggle/working/cogload/processData')
 from processing_Data import Preprocessing
+from selection_feature import Feature_Selection
 
 sys.path.append('/kaggle/working/cogload/Model')
 from single_model import train_model as train_model_single
