@@ -9,18 +9,11 @@ from argparse import ArgumentParser
 import warnings
 warnings.simplefilter("ignore")#ignore warnings during executiona
 
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
-from sklearn.ensemble import RandomForestClassifier as RF
-from sklearn.svm import SVC
-from xgboost import XGBClassifier
-
 import sys
-sys.path.append('/kaggle/working/cogload/processData/')
+sys.path.append('/kaggle/working/cogload/processData')
 from processing_Data import Preprocessing
-from selection_feature import Feature_Selection
-from EDA import EDA
-sys.path.append('/kaggle/working/cogload/model/')
-from single_model import train_model as train_model_single
+
+sys.path.append('/kaggle/working/cogload/Model')
 
 #argument parser
 parser = ArgumentParser()
@@ -37,6 +30,8 @@ parser.add_argument("--estimator_RFECV", default='SVM', type=str, help="model fo
 parser.add_argument("--debug", default = 0, type = int, help="debug mode 0: no debug, 1: debug")
 parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
 parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
+# parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
+parser.add_argument("--expert_lib",default='None' , type=str, help=" is the library used to extract expert features (None, 'nk', 'analysis_pyteap', 'HRV_nk', 'HRV_analysis', 'EDA_nk', 'pyteap', 'both')")
 
 args = parser.parse_args()
 
@@ -46,7 +41,6 @@ log_args = pd.DataFrame([args_dict])
 directory_name = '/kaggle/working/log/'
 if not os.path.exists(directory_name):
     os.makedirs(directory_name)
-    os.makedirs(directory_name+'remove/result/')
 file_name = f'args.csv'  
 log_args.to_csv(os.path.join(directory_name, file_name), index=False)
 
@@ -63,14 +57,15 @@ print('Heart Rate',hr_df.shape)
 print('GSR',gsr_df.shape)
 print('RR',rr_df.shape)
 
-processing_data = Preprocessing(window_size = args.window_size,
-                            temp_df = temp_df,
-                            hr_df = hr_df,
-                            gsr_df = gsr_df,
-                            rr_df = rr_df,
-                            label_df = label_df,
-                            normalize = args.normalize)
-X_train, y_train, X_test, y_test, user_train, user_test = processing_data.get_data()
+preprocessing = Preprocessing(temp_df = temp_df, 
+                              hr_df = hr_df, 
+                              gsr_df = gsr_df, 
+                              rr_df = rr_df, 
+                              label_df = label_df, 
+                              window_size = args.window_size, 
+                              normalize = args.normalize, 
+                              expert_lib = args.expert_lib)
+X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
 
 X_train.columns = [f"{col}_{i}" if list(X_train.columns).count(col) > 1 else col for i, col in enumerate(X_train.columns,1)]
 X_test.columns = [f"{col}_{i}" if list(X_test.columns).count(col) > 1 else col for i, col in enumerate(X_test.columns,1)]
