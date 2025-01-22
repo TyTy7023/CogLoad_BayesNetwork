@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
+import sys
+sys.path.append('/kaggle/working/cogload/Model')
+from Expert_HRV import HRV
+from Expert_eda import eda
+
 class Preprocessing :
     '''
     Preprocessing class to extract statistical features from the data and split the data into training and testing sets.
@@ -50,7 +55,8 @@ class Preprocessing :
     user_test : list
         List containing user IDs for testing data
     '''
-    def __init__(self, temp_df, hr_df, gsr_df, rr_df, label_df, window_size = 1, normalize = "Standard", data_type=''):
+    
+    def __init__(self, temp_df, hr_df, gsr_df, rr_df, label_df, window_size = 1, normalize = "Standard", expert_lib='None'):
         if(window_size > len(temp_df.columns)):
             raise ValueError("Window size is greater than the number of samples. Please choose a smaller window size.")
         self.window_size = window_size
@@ -63,8 +69,11 @@ class Preprocessing :
         self.rr_df = rr_df
         self.label_df = label_df
         self.stat_feat_all = None
-        self.data_type = data_type
+        self.expert_lib = expert_lib
         self.stat_feat_after = pd.concat([temp_df, hr_df, gsr_df, rr_df],axis=1)
+
+        self.HRV = HRV(self.rr_df)
+        self.EDA = eda(self.gsr_df, 10)
 
     # Simple Moving Average (SMA) filter
     def SMA(self):
@@ -99,17 +108,35 @@ class Preprocessing :
     
     # Extract statistical features from the data
     def extract_features(self):
-        self.temp_stat_features = Preprocessing.extract_stat_features(self.temp_df,'temp'+self.data_type) 
-        self.hr_stat_features = Preprocessing.extract_stat_features(self.hr_df,'hr'+self.data_type)
-        self.gsr_stat_features = Preprocessing.extract_stat_features(self.gsr_df,'gsr'+self.data_type)
-        self.rr_stat_features = Preprocessing.extract_stat_features(self.rr_df,'rr'+self.data_type)
+        self.temp_stat_features = Preprocessing.extract_stat_features(self.temp_df,'temp') 
+        self.hr_stat_features = Preprocessing.extract_stat_features(self.hr_df,'hr')
+        self.gsr_stat_features = Preprocessing.extract_stat_features(self.gsr_df,'gsr')
+        self.rr_stat_features = Preprocessing.extract_stat_features(self.rr_df,'rr')
         self.stat_feat_all = pd.concat([self.temp_stat_features, self.hr_stat_features, self.gsr_stat_features, self.rr_stat_features],axis=1)
         self.stat_feat_after = self.stat_feat_all
+
+    def expert_features(self):
+        lib_to_features = {
+            'nk': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_nk.reset_index(drop=True), self.EDA.eda_features_nk.reset_index(drop=True)],
+            'analysis_pyteap': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_analysis.reset_index(drop=True), self.EDA.eda_features_pyteap.reset_index(drop=True)],
+            'HRV_nk': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_nk.reset_index(drop=True)],
+            'HRV_analysis': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_analysis.reset_index(drop=True)],
+            'EDA_nk': [self.stat_feat_all.reset_index(drop=True), self.EDA.eda_features_nk.reset_index(drop=True)],
+            'pyteap': [self.stat_feat_all.reset_index(drop=True), self.EDA.eda_features_pyteap.reset_index(drop=True)],
+            'both': [self.stat_feat_all.reset_index(drop=True), self.HRV.hrv_features_nk.reset_index(drop=True),
+                    self.HRV.hrv_features_analysis.reset_index(drop=True), self.EDA.eda_features_nk.reset_index(drop=True), self.EDA.eda_features_pyteap.reset_index(drop=True)]
+        }
+        
+        feature_list = lib_to_features.get(self.expert_lib, [self.stat_feat_all.reset_index(drop=True)])
+        self.stat_feat_after = pd.concat(feature_list, axis=1)
+        # export file
+        self.stat_feat_after.to_csv('/kaggle/working/log/all_features.csv', index=False)
+
 
     #  Remove features from the data
     def remove_features(self, feature_list):
         if feature_list != "None":
-            self.stat_feat_after = self.stat_feat_all.drop(columns = feature_list, errors = 'ignore')            
+            self.stat_feat_after = self.stat_feat_after.drop(columns = feature_list, errors = 'ignore')            
 
     # Split data into training and testing sets
     def splits_train_test(self):
@@ -178,6 +205,8 @@ class Preprocessing :
             if(self.window_size > 1):
                 self.SMA()
             self.extract_features()
+        
+        self.expert_features()
         self.remove_features(features_to_remove)
         self.splits_train_test()
         self.X_train, self.X_test = self.normalize_data(self.X_train, self.X_test)
