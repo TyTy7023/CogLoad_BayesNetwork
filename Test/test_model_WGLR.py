@@ -56,17 +56,14 @@ print('GSR',gsr_df.shape)
 print('RR',rr_df.shape)
 
 # Xử lý dữ liệu
-preprocessing = Preprocessing(
-    temp_df=temp_df, 
-    hr_df=hr_df, 
-    gsr_df=gsr_df, 
-    rr_df=rr_df, 
-    label_df=label_df, 
-    window_size=window_size, 
-    normalize=normalize, 
-    expert_lib=expert_lib
-)
-
+preprocessing = Preprocessing(temp_df = temp_df, 
+                              hr_df = hr_df, 
+                              gsr_df = gsr_df, 
+                              rr_df = rr_df, 
+                              label_df = label_df, 
+                              window_size = args.window_size, 
+                              normalize = args.normalize, 
+                              expert_lib= args.expert_lib)
 X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove='None')
 
 
