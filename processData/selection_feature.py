@@ -65,11 +65,18 @@ class Feature_Selection:
     def selected_SBS(X_train, X_test, y_train, y_test, user_train, models, features_number):
         loop = X_train.shape[1] - 1
         # create folder and file result
-        directory_name = '/kaggle/working/log/remove'
-        if not os.path.exists('/kaggle/working/log'):
-            os.makedirs('/kaggle/working/log')
+        directory_name = '/kaggle/working/log'
         if not os.path.exists(directory_name):
             os.makedirs(directory_name)
+
+        directory_name = directory_name + '/remove'
+        if not os.path.exists(directory_name):
+            os.makedirs(directory_name)
+
+        directory_name = directory_name + '/result'
+        if not os.path.exists(directory_name):
+            os.makedirs(directory_name)
+            
         result = pd.DataFrame({
             'Model': [],
             'Best Column': [],
