@@ -76,7 +76,7 @@ class Feature_Selection:
         directory_name = directory_name + '/result'
         if not os.path.exists(directory_name):
             os.makedirs(directory_name)
-            
+
         result = pd.DataFrame({
             'Model': [],
             'Best Column': [],
@@ -154,16 +154,16 @@ class Feature_Selection:
                         X_test_cp = X_test.drop(columns=[f'{feature}'])
                         
                         train_model(X_train_cp, 
-                                        y_train, 
-                                        X_test_cp, 
-                                        y_test, 
-                                        user_train,
-                                        feature_remove=feature, 
-                                        n_splits=3, 
-                                        path = directory_name, 
-                                        debug = 0,
-                                        models = [model],
-                                        index_name = i)
+                                    y_train, 
+                                    X_test_cp, 
+                                    y_test, 
+                                    user_train,
+                                    feature_remove=feature, 
+                                    n_splits=3, 
+                                    path = directory_name, 
+                                    debug = 0,
+                                    models = [model],
+                                    index_name = i)
                             
                     df = pd.read_csv(directory_name + f'{i}_results_model.csv')
                     max_number = df['accuracy'].max()

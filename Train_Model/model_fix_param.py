@@ -122,7 +122,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
             if model == []:
                 raise ValueError(f"Model {model} is not supported")
             
-            y_val_pred = estimator.predict(X_val_fold)
+            y_val_pred = np.round(y_pred_prob)
             y_pred_vals.append(y_pred_prob)
 
             accuracy = accuracy_score(y_val_fold, y_val_pred)
