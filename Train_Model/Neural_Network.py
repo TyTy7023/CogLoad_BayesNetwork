@@ -41,7 +41,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
 
         # Lặp qua từng fold
         for fold, (train_index, val_index) in enumerate(kf.split(X_train, y_train, groups = user_train)):
-            X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
+            X_train_fold, X_val_fold = X_train[train_index], X_train[val_index]
             y_train_fold, y_val_fold = y_train[train_index], y_train[val_index]
             y_vals.append(y_val_fold)
             
