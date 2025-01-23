@@ -66,6 +66,8 @@ class Feature_Selection:
         loop = X_train.shape[1] - 1
         # create folder and file result
         directory_name = '/kaggle/working/log/remove'
+        if not os.path.exists('/kaggle/working/log'):
+            os.makedirs('/kaggle/working/log')
         if not os.path.exists(directory_name):
             os.makedirs(directory_name)
         result = pd.DataFrame({
