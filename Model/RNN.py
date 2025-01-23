@@ -64,8 +64,16 @@ class RNNModel:
         :param X_test: Dữ liệu kiểm tra.
         :return: Kết quả dự đoán.
         """
-        return self.model.predict(X_test)
+        return np.round(self.model.predict(X_test))
 
+    def predict_proba(self, X_test):
+        """
+        Dự đoán xác suất với dữ liệu kiểm tra.
+        :param X_test: Dữ liệu kiểm tra.
+        :return: Xác suất dự đoán.
+        """
+        return self.model.predict(X_test)
+    
     def evaluate(self, X_test, y_test):
         """
         Đánh giá mô hình trên tập kiểm tra.
