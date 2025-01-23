@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import roc_curve, auc
@@ -69,3 +70,31 @@ class EDA:
         plt.ylabel(f'{Type} (Test)')
         plt.xticks(rotation=90)
         EDA._save_plot(path, Type)
+
+    @staticmethod
+    def draw_3D_Data(path, data):
+        depth = data.shape[0]  # Số lượng lát cắt (632)
+        rows = int(np.ceil(np.sqrt(depth)))  # Số hàng cho lưới subplots
+        cols = rows  # Số cột cho lưới subplots
+
+        # Tạo hình ảnh subplots
+        fig, axes = plt.subplots(rows, cols, figsize=(20, 20))
+        axes = axes.flatten()  # Chuyển mảng axes thành 1D để dễ xử lý
+
+        for i in range(depth):
+            ax = axes[i]
+            im = ax.imshow(X_train[i], aspect='auto', cmap='viridis')  # Hiển thị lát cắt i
+            ax.set_title(f"Slice {i}", fontsize=8)
+            ax.axis('off')  # Tắt trục tọa độ
+
+        # Xóa các ô subplot thừa (nếu có)
+        for i in range(depth, len(axes)):
+            fig.delaxes(axes[i])
+
+        # Thêm thanh màu chung (colorbar)
+        fig.colorbar(im, ax=axes, orientation='vertical', fraction=0.02, pad=0.04)
+
+        # Hiển thị hình ảnh
+        plt.tight_layout()
+        EDA._save_plot(path, 'DATA_3D')
+

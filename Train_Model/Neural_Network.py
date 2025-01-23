@@ -15,7 +15,7 @@ from EDA import EDA
 
 sys.path.append('/kaggle/working/cogload/Model')
 from CNN import CNNModel
-from RNN import CNNModel
+from RNN import RNNModel
 
 def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['RNN', 'CNN']):
     np.random.seed(42)

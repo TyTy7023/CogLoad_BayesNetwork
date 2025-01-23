@@ -13,6 +13,9 @@ import sys
 sys.path.append('/kaggle/working/cogload/processData')
 from process_Data_to_3D import process3D_Data
 
+sys.path.append('/kaggle/working/cogload/Exploratory_Data/')
+from EDA import EDA 
+
 sys.path.append('/kaggle/working/cogload/Train_Model/')
 
 #argument parser
@@ -70,10 +73,7 @@ preprocessing = process3D_Data(temp_df = temp_df,
 X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
 
 print(f'X_train: {X_train.shape}')
-plt.imshow(X_train[5], cmap='viridis')
-plt.colorbar()
-plt.title("Slice at depth=5")
-plt.show()
+EDA.draw_3D_Data(directory_name, X_train)
 
 if len(args.models_network) > 0:
     from Neural_Network import train_model 
