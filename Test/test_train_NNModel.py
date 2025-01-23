@@ -3,6 +3,7 @@ import os
 import ast
 from datetime import datetime
 #data analysis and manipulation library
+import numpy as np
 import pandas as pd
 from argparse import ArgumentParser
 
@@ -69,10 +70,9 @@ preprocessing = process3D_Data(temp_df = temp_df,
                               expert_lib= args.expert_lib)
 X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
 
-print(f'X_train: {X_train.shape}, columns: {X_train.columns}')
-print(f'X_test: {X_test.shape}, columns: {X_test.columns}')
+print(f'X_train: {X_train.shape}')
 
-X_train.to_csv('/kaggle/working/log/X_train.csv', index=False)
+np.savetxt("X_train.txt", X_train, fmt='%.5f', delimiter=',')  # fmt='%.5f' để lưu 5 chữ số thập phân
 
 if len(args.models_single) > 0:
     from Neural_Network import train_model 
