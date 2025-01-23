@@ -72,7 +72,9 @@ X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data
 
 print(f'X_train: {X_train.shape}')
 
-np.savetxt("X_train.txt", X_train, fmt='%.5f', delimiter=',')  # fmt='%.5f' để lưu 5 chữ số thập phân
+import h5py
+with h5py.File("X_train.h5", "w") as hf:
+    hf.create_dataset("X_train", data=X_train)
 
 if len(args.models_single) > 0:
     from Neural_Network import train_model 
