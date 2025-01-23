@@ -17,8 +17,8 @@ import seaborn as sns
 
 
 import sys
-sys.path.append('/kaggle/working/cogload/')
-from EDA import EDA
+sys.path.append('/kaggle/working/cogload/Exploratory_Data/')
+from EDA import EDA 
 
 sys.path.append('/kaggle/working/cogload/model/')
 
