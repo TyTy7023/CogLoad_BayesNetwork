@@ -12,6 +12,10 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 import sys
 sys.path.append('/kaggle/working/cogload/processData')
 from processing_Data import Preprocessing
+from process_Data_to_3D import process3D_Data
+
+sys.path.append('/kaggle/working/cogload/Exploratory_Data/')
+from EDA import EDA 
 
 sys.path.append('/kaggle/working/cogload/Train_Model')
 
@@ -30,6 +34,7 @@ parser.add_argument("--estimator_RFECV", default='SVM', type=str, help="model fo
 parser.add_argument("--debug", default = 0, type = int, help="debug mode 0: no debug, 1: debug")
 parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
 parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
+parser.add_argument("--models_network", nargs='+', default=[] , type=str, help="models to train, 'CNN', 'RNN'")
 # parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
 parser.add_argument("--expert_lib",default='None' , type=str, help=" is the library used to extract expert features (None, 'nk', 'analysis_pyteap', 'HRV_nk', 'HRV_analysis', 'EDA_nk', 'pyteap', 'both')")
 
@@ -97,6 +102,31 @@ if len(args.models_mul) > 0:
                 debug = args.debug, 
                 models = args.models_mul)
     
+if len(args.models_network) > 0:
+    preprocessing = process3D_Data(temp_df = temp_df, 
+                              hr_df = hr_df, 
+                              gsr_df = gsr_df, 
+                              rr_df = rr_df, 
+                              label_df = label_df, 
+                              window_size = args.window_size, 
+                              normalize = args.normalize, 
+                              expert_lib= args.expert_lib)
+    X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
+
+    print(f'X_train: {X_train.shape}')
+    EDA.draw_3D_Data(directory_name, X_train)
+
+    if len(args.models_network) > 0:
+        from Neural_Network import train_model 
+        train_model(X_train = X_train, 
+                    y_train = y_train, 
+                    X_test = X_test, 
+                    y_test = y_test, 
+                    user_train = user_train,
+                    path = directory_name, 
+                    n_splits = args.GroupKFold, 
+                    debug = args.debug, 
+                    models = args.models_network)
 
 
 
