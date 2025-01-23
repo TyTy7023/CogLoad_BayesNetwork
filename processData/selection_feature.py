@@ -12,7 +12,7 @@ from xgboost import XGBClassifier
 from sklearn.svm import SVC
 
 import sys
-sys.path.append('/kaggle/working/cogload/model/')
+sys.path.append('/kaggle/working/cogload/Train_Model/')
 from model_fix_param import train_model 
 
 class Feature_Selection:
