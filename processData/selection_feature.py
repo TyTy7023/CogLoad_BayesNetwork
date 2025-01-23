@@ -93,9 +93,6 @@ class Feature_Selection:
         X_train_cp = X_train.copy(deep=True)
         X_test_cp = X_test.copy(deep=True)
         features = X_train.columns.tolist() 
-        best_columns = []
-        accs = []
-        y_probs = []
 
         for model in models:
             test_accuracies = []
