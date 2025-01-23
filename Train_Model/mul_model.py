@@ -22,7 +22,7 @@ from ESVM import ESVM
 def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['MLP_Sklearn', 'MLP_Keras','TabNet', 'E7GB', 'ESVM']):
     np.random.seed(42)
     path = os.path.dirname(path)
-    path_EDA = path + '/EDA/'
+    path_EDA = path + '/EDA/multi_model/'
 
     if debug == 1:
         models = models[:2]

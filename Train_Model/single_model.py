@@ -26,7 +26,7 @@ from EDA import EDA
 def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['LR', 'LDA', 'KNN', 'RF', 'AB', 'GB', 'SVM', 'XGB']):
     np.random.seed(42)
     path = os.path.dirname(path)
-    path_EDA = path + '/EDA/'
+    path_EDA = path + '/EDA/single_model/'
 
     if debug == 1:
         models = models[:2]
@@ -119,7 +119,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
         })
         print("\n===================================================================================================================================\n")
     log_results = pd.DataFrame(log_results)
-    file_name = f'results_model.csv'  # Tên file tự động
+    file_name = f'results_single_model.csv'  # Tên file tự động
     log_results.to_csv(os.path.join(path, file_name), index=False)
 
     EDA.draw_Bar(path_EDA, models, test_accuracy_models, 'Accuracy Test')
