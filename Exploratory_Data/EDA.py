@@ -83,7 +83,7 @@ class EDA:
 
         for i in range(depth):
             ax = axes[i]
-            im = ax.imshow(X_train[i], aspect='auto', cmap='viridis')  # Hiển thị lát cắt i
+            im = ax.imshow(data[i], aspect='auto', cmap='viridis')  # Hiển thị lát cắt i
             ax.set_title(f"Slice {i}", fontsize=8)
             ax.axis('off')  # Tắt trục tọa độ
 
