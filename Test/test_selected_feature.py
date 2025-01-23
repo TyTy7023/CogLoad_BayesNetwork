@@ -17,6 +17,9 @@ from selection_feature import Feature_Selection
 sys.path.append('/kaggle/working/cogload/Train_Model')
 from single_model import train_model as train_model_single
 
+sys.path.append('/kaggle/working/cogload/Exploratory_Data/')
+from EDA import EDA 
+
 #argument parser
 parser = ArgumentParser()
 parser.add_argument("--data_folder_path", default = "/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/", type = str, help = "Path to the data folder")
@@ -32,6 +35,7 @@ parser.add_argument("--estimator_RFECV", default='SVM', type=str, help="model fo
 parser.add_argument("--debug", default = 0, type = int, help="debug mode 0: no debug, 1: debug")
 parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
 parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
+parser.add_argument("--models_network", nargs='+', default=[] , type=str, help="models to train, 'CNN', 'RNN'")
 # parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
 parser.add_argument("--expert_lib",default='None' , type=str, help=" is the library used to extract expert features (None, 'nk', 'analysis_pyteap', 'HRV_nk', 'HRV_analysis', 'EDA_nk', 'pyteap', 'both')")
 
@@ -114,27 +118,53 @@ if args.model_selected_feature == 'SBS':
     EDA.draw_ROC_models_read_file(models, y_test, path=f'/kaggle/working/log/remove/result/result.csv')
 
 if args.model_selected_feature == 'None':
-    if args.models_single != []:
-        train_model_single(X_train, 
-                y_train, 
-                X_test, 
-                y_test, 
-                user_train,
-                n_splits=args.GroupKFold, 
-                path = directory_name, 
-                debug = args.debug,
-                models= args.models_single)
-
-    if args.models_mul != []:
-        from mul_model import train_model as train_model_mul
-        train_model_mul(X_train,
-                    y_train, 
-                    X_test, 
-                    y_test, 
-                    user_train,
-                    n_splits=args.GroupKFold, 
+    if len(args.models_single) > 0:
+        from single_model import train_model as single_model
+        single_model(X_train = X_train, 
+                    y_train = y_train, 
+                    X_test = X_test, 
+                    y_test = y_test, 
+                    user_train = user_train,
                     path = directory_name, 
-                    debug = args.debug,
-                    models= args.models_mul)
+                    n_splits = args.GroupKFold, 
+                    debug = args.debug, 
+                    models = args.models_single)
         
-    EDA.draw_ROC_models_read_file(models, y_test,path='/kaggle/working/log/results_model.csv')
+    if len(args.models_mul) > 0:
+        from mul_model import train_model as multi_model
+        multi_model(X_train = X_train, 
+                    y_train = y_train, 
+                    X_test = X_test, 
+                    y_test = y_test, 
+                    user_train = user_train,
+                    path = directory_name, 
+                    n_splits = args.GroupKFold, 
+                    debug = args.debug, 
+                    models = args.models_mul)
+        
+    if len(args.models_network) > 0:
+        preprocessing = process3D_Data(temp_df = temp_df, 
+                                hr_df = hr_df, 
+                                gsr_df = gsr_df, 
+                                rr_df = rr_df, 
+                                label_df = label_df, 
+                                window_size = args.window_size, 
+                                normalize = args.normalize, 
+                                expert_lib= args.expert_lib)
+        X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
+
+        print(f'X_train: {X_train.shape}')
+        EDA.draw_3D_Data(directory_name, X_train)
+
+        if len(args.models_network) > 0:
+            from Neural_Network import train_model 
+            train_model(X_train = X_train, 
+                        y_train = y_train, 
+                        X_test = X_test, 
+                        y_test = y_test, 
+                        user_train = user_train,
+                        path = directory_name, 
+                        n_splits = args.GroupKFold, 
+                        debug = args.debug, 
+                        models = args.models_network)
+

@@ -47,6 +47,7 @@ class MLP:
             clear_session()
 
             self.fixed_params = {
+                "num_hidden_layers": 3,
                 "units": 128,
                 "units_1": 64,
                 "units_2": 128,
@@ -57,11 +58,14 @@ class MLP:
                 "loss": "binary_crossentropy",
             }
         
+            # Tầng đầu vào
             model.add(Dense(units=self.fixed_params["units"], activation=self.fixed_params["activation"], input_shape=self.input_shape))
-            model.add(Dense(units=self.fixed_params["units_1"], activation=self.fixed_params["activation"]))
-            model.add(Dense(units=self.fixed_params["units_2"], activation=self.fixed_params["activation"]))
-            model.add(Dense(units=self.fixed_params["units_3"], activation=self.fixed_params["activation"]))
-            model.add(Dense(units=self.fixed_params["units_4"], activation=self.fixed_params["activation"]))
+            
+            # Tầng ẩn
+            for i in range(1, self.fixed_params["num_hidden_layers"] + 1):
+                model.add(Dense(units=self.fixed_params[f"units_{i}"], activation=self.fixed_params["activation"]))
+            
+            # Tầng đầu ra
             model.add(Dense(1, activation="sigmoid"))
             
             # Sử dụng optimizer cố định

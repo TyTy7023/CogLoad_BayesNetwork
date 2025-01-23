@@ -1,0 +1,9 @@
+model,accuracy,best_model,f1_score,confusion_matrix
+MLP_Sklearn,0.6373056994818653 +- 0.05480657695742334,"{'solver': 'adam', 'learning_rate': 'constant', 'hidden_layer_sizes': (32,), 'alpha': 0.001, 'activation': 'logistic'}","0.5977011494252874,0.669811320754717","[[52 43]
+ [27 71]]"
+MLP_Keras,0.6683937823834197 +- 0.044428380667095604,"{'num_hidden_layers': 3, 'units': 128, 'units_1': 64, 'optimizer': 'adam', 'units_2': 128, 'units_3': 128, 'units_4': 32}","0.6049382716049384,0.7142857142857143","[[49 46]
+ [18 80]]"
+E7GB,0.6683937823834197 +- 0.032989130488949026,"{0: {'num_leaves': 216, 'max_bin': 398, 'colsample_bytree': '0.730', 'learning_rate': '0.270', 'lambda_l2': 55, 'objective': 'binary'}, 1: {'num_leaves': 176, 'max_bin': 413, 'colsample_bytree': '0.730', 'learning_rate': '0.280', 'lambda_l2': 56, 'objective': 'binary'}, 2: {'num_leaves': 362, 'max_bin': 438, 'colsample_bytree': '0.550', 'learning_rate': '0.220', 'lambda_l2': 69, 'objective': 'binary'}, 3: {'num_leaves': 544, 'max_bin': 22, 'colsample_bytree': '0.320', 'learning_rate': '0.220', 'lambda_l2': 76, 'objective': 'binary'}, 4: {'num_leaves': 366, 'max_bin': 218, 'colsample_bytree': '0.400', 'learning_rate': '0.180', 'lambda_l2': 86, 'objective': 'binary'}, 5: {'num_leaves': 123, 'max_bin': 442, 'colsample_bytree': '0.410', 'learning_rate': '0.500', 'lambda_l2': 87, 'objective': 'binary'}, 6: {'num_leaves': 246, 'max_bin': 316, 'colsample_bytree': '0.670', 'learning_rate': '0.450', 'lambda_l2': 138, 'objective': 'binary'}}","0.719298245614035,0.5949367088607594","[[82 13]
+ [51 47]]"
+ESVM,0.6580310880829016 +- 0.05199596355228741,"{'pca__n_components': 27, 'svc__C': 0.43870109921004274, 'svc__kernel': 'rbf', 'svc__gamma': 0.002783953864803332, 'adaboost__n_estimators': 84, 'adaboost__learning_rate': 0.1386418527387466}","0.6292134831460674,0.6826923076923077","[[56 39]
+ [27 71]]"

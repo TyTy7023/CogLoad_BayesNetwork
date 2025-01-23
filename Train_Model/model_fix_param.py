@@ -10,6 +10,7 @@ from sklearn.metrics import f1_score
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.ensemble import RandomForestClassifier as RF
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression as LR
 from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -51,7 +52,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
 
             elif model == 'LR':
-                estimator = LR(C=1.0, solver='lbfgs', max_iter=1000, n_jobs=-1)
+                estimator = LR(C= 1, penalty= 'l2', solver= 'liblinear', random_state=42)
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
 
@@ -62,7 +63,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
 
                 estimator.fit(X_train_fold, y_train_fold)
             elif model == 'RF':
-                estimator = RF(n_estimators=300, max_depth=10, random_state=42, min_samples_leaf=2, min_samples_split=5)
+                estimator = RF(max_depth = 10, min_samples_leaf = 2, min_samples_split = 5, n_estimators = 300)
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
 
@@ -83,11 +84,40 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 estimator.fit(X_train_fold, y_train_fold, X_val_fold, y_val_fold, path)
                 y_pred_prob = estimator.predict_proba(X_val_fold)
 
+            elif model == 'E7GB':
+                from Model.E7GB import EnsembleModel_7GB
+                estimator = EnsembleModel_7GB()
+                estimator.fit(X_train_fold, y_train_fold)
+                y_pred_prob = estimator.predict_proba(X_val_fold)
+
+            elif model == 'ESVM':
+                from Model.ESVM import ESVM
+                fixed_params = {
+                    'pca__n_components': 27,
+                    'svc__C': 0.43870109921004274,
+                    'svc__kernel': 'rbf',
+                    'svc__gamma': 0.002783953864803332,
+                    'adaboost__n_estimators': 84,
+                    'adaboost__learning_rate': 0.1386418527387466
+                }
+                # Tạo đối tượng ESVM
+                estimator = ESVM()
+
+                # Khởi tạo mô hình với tham số cố định
+                estimator.best_params = fixed_params
+                estimator.best_model = estimator.build(fixed_params)
+                
+                # Huấn luyện mô hình với dữ liệu
+                estimator.fit(X_train_fold, y_train_fold)
+                y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
+
+            '''
             elif model == 'TabNet':
                 from Model.TabNet_fix_param import TabNet
                 estimator = TabNet()
                 estimator.fit(X_train_fold, y_train_fold, X_val_fold, y_val_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:, 1]
+            '''
 
             if model == []:
                 raise ValueError(f"Model {model} is not supported")
