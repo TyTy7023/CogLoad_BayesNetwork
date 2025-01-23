@@ -110,19 +110,18 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 # Huấn luyện mô hình với dữ liệu
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
-
-            '''
+            
+            
             elif model == 'TabNet':
                 from Model.TabNet_fix_param import TabNet
                 estimator = TabNet()
                 estimator.fit(X_train_fold, y_train_fold, X_val_fold, y_val_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:, 1]
-            '''
 
-            if model == []:
+            else:
                 raise ValueError(f"Model {model} is not supported")
             
-            y_val_pred = np.round(y_pred_prob)
+            y_val_pred = estimator.predict(X_val_fold)
             y_pred_vals.append(y_pred_prob)
 
             accuracy = accuracy_score(y_val_fold, y_val_pred)
