@@ -2,8 +2,7 @@
 import os
 import ast
 from datetime import datetime
-#data analysis and manipulation library
-import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 from argparse import ArgumentParser
 
@@ -71,12 +70,12 @@ preprocessing = process3D_Data(temp_df = temp_df,
 X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
 
 print(f'X_train: {X_train.shape}')
+plt.imshow(X_train[5], cmap='viridis')
+plt.colorbar()
+plt.title("Slice at depth=5")
+plt.show()
 
-import h5py
-with h5py.File("/kaggle/working/X_train.h5", "w") as hf:
-    hf.create_dataset("X_train", data=X_train)
-
-if len(args.models_single) > 0:
+if len(args.models_network) > 0:
     from Neural_Network import train_model 
     train_model(X_train = X_train, 
                  y_train = y_train, 
