@@ -84,4 +84,4 @@ if len(args.models_single) > 0:
                  path = directory_name, 
                  n_splits = args.GroupKFold, 
                  debug = args.debug, 
-                 models = args.models_single)
+                 models = args.models_network)
