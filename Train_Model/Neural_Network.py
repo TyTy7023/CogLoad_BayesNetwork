@@ -56,12 +56,12 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
             # Train model
             if model == 'RNN':
                 estimator = RNNModel()
-                history = estimator.train(X_train, y_train, epochs=20, batch_size=32)
+                estimator.train(X_train, y_train, epochs=20, batch_size=32)
                 y_pred_prob = estimator.predict_proba(X_val_fold)
                 
             elif model == 'CNN':
                 estimator = CNNModel()
-                history = estimator.train(X_train, y_train, epochs=20, batch_size=32)
+                estimator.train(X_train, y_train, epochs=20, batch_size=32)
                 y_pred_prob = estimator.predict_proba(X_val_fold)
             
             else:
@@ -74,7 +74,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
 
             if accuracy > best_score:
                 best_score = accuracy
-                best_model = history
+                best_model = estimator
 
         # ROC tâp validation K-Fold
         EDA.draw_ROC(path_EDA + "/models/", y_vals, y_pred_vals, model)
