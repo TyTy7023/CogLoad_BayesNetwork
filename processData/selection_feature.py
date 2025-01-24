@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-from joblib import Parallel, delayed
 import warnings
 
 from sklearn.model_selection import GroupKFold
@@ -64,91 +63,156 @@ class Feature_Selection:
 
     @staticmethod
     def selected_SBS(X_train, X_test, y_train, y_test, user_train, models, features_number):
-        def create_directory(path):
-            if not os.path.exists(path):
-                os.makedirs(path)
-            return path
-    
-        def save_results_to_csv(filepath, data, mode='w', header=True):
-            pd.DataFrame(data).to_csv(filepath, mode=mode, header=header, index=False)
-    
-        # Create necessary directories
-        base_dir = create_directory('/kaggle/working/log/remove/result')
-        result_file = f'{base_dir}/result.csv'
-        save_results_to_csv(result_file, {'Model': [], 'Best Column': [], 'Shape': [], 'Accuracy': [], 'Y Probs': []})
-    
-        raw_train, raw_test = X_train.copy(), X_test.copy()
-    
+        loop = X_train.shape[1] - 1
+        # create folder and file result
+        directory_name = '/kaggle/working/log'
+        if not os.path.exists(directory_name):
+            os.makedirs(directory_name)
+
+        directory_name = directory_name + '/remove'
+        if not os.path.exists(directory_name):
+            os.makedirs(directory_name)
+
+        directory_name = directory_name + '/result'
+        if not os.path.exists(directory_name):
+            os.makedirs(directory_name)
+
+        result = pd.DataFrame({
+            'Model': [],
+            'Best Column': [],
+            'Shape': [],
+            'Accuracy': [],
+            'Y Probs': []
+        })
+        result.to_csv('/kaggle/working/log/remove/result/result.csv', index=False)
+
+        # create variable
+        raw_train = X_train.copy(deep=True)
+        raw_test = X_test.copy(deep=True)
+
+        X_train_cp = X_train.copy(deep=True)
+        X_test_cp = X_test.copy(deep=True)
+        features = X_train.columns.tolist() 
+
         for model in models:
             test_accuracies = []
-            remain, acc, y_probs = [], [], []
-            X_train, X_test = raw_train.copy(), raw_test.copy()
+            REMAIN = []
+            ACC = []
+            Y_PROBS = []
+
+            X_train_cp = raw_train.copy(deep=True)
+            X_test_cp = raw_test.copy(deep=True)
+            X_train = X_train_cp.copy(deep=True)
+            X_test = X_test_cp.copy(deep=True)
             features = X_train.columns.tolist()
-    
+
             print(f"MODEL: {model} - SHAPE: {X_train.shape}")
-    
-            model_dir = create_directory(f'/kaggle/working/log/remove/{model}/')
+
+            i = 0
+            directory_name = f'/kaggle/working/log/remove/{model}/'
+            if not os.path.exists(directory_name):
+                os.makedirs(directory_name)
             if model == 'MLP_Keras':
-                X_train, X_test = Feature_Selection.selected_SFS(
-                    X_train=X_train, X_test=X_test, y_train=y_train,
-                    model=SVC(kernel='linear'), k_features=features_number,
-                    forward=False, floating=True
-                )
-    
-                train_model(X_train, y_train, X_test, y_test, user_train,
-                            feature_remove='---', n_splits=3, path=model_dir,
-                            debug=0, models=[model], index_name=0)
-    
-                df = pd.read_csv(f'{model_dir}/0_results_model.csv')
-                max_acc = df['accuracy'].max()
-                best_feature, y_prob = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs']]
-    
-                remain.append(X_train.columns)
-                acc.append(max_acc)
-                y_probs.append(y_prob)
-                test_accuracies.append((X_train.columns, max_acc, y_prob))
+                X_train, X_test = Feature_Selection.selected_SFS(X_train = X_train,
+                                                X_test = X_test, 
+                                                y_train = y_train,
+                                                model = SVC(kernel='linear'),
+                                                k_features = features_number, 
+                                                forward = False,
+                                                floating = True
+                                                )
+                                                
+                train_model(X_train, 
+                            y_train, 
+                            X_test, 
+                            y_test, 
+                            user_train,
+                            feature_remove='---', 
+                            n_splits=3, 
+                            path = directory_name, 
+                            debug = 0,
+                            models = [model],
+                            index_name = i)
+                
+                df = pd.read_csv(directory_name + f'{i}_results_model.csv')
+                max_number = df['accuracy'].max()
+                name_max_number = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs']]
+
+                REMAIN.append(X_train.columns)
+                ACC.append(max_number) 
+                Y_PROBS.append(name_max_number['y_probs'])
+
+                test_accuracies.append((X_train.columns, max_number, name_max_number['y_probs'])) 
+                
             else:
-                for i in range(X_train.shape[1] - 1):
-                    def evaluate_feature(feature):
-                        X_train_cp = X_train.drop(columns=[feature])
-                        X_test_cp = X_test.drop(columns=[feature])
-                        train_model(X_train_cp, y_train, X_test_cp, y_test, user_train,
-                                    feature_remove=feature, n_splits=3, path=model_dir,
-                                    debug=0, models=[model], index_name=i)
-                        df = pd.read_csv(f'{model_dir}/{i}_results_model.csv')
-                        return feature, df['accuracy'].max(), df.loc[df['accuracy'].idxmax(), 'y_probs']
-    
-                    # Parallel processing for feature evaluation
-                    feature_scores = Parallel(n_jobs=-1)(delayed(evaluate_feature)(feature) for feature in features)
-    
-                    best_feature, max_acc, y_prob = max(feature_scores, key=lambda x: x[1])
-                    X_train, X_test = X_train.drop(columns=[best_feature]), X_test.drop(columns=[best_feature])
-                    features = X_train.columns.tolist()
-    
-                    remain.append(X_train.columns)
-                    acc.append(max_acc)
-                    y_probs.append(y_prob)
-                    test_accuracies.append((X_train.columns, max_acc, y_prob))
-    
-            save_results_to_csv(f'{base_dir}/{model}.csv', {
-                'features': remain, 'accuracy': acc, 'y_probs': y_probs
-            })
-    
-            feature_counts = [len(f) for f, _, _ in test_accuracies]
-            accuracies = [a for _, a, _ in test_accuracies]
-    
+                while(i<loop):
+                    for feature in features:
+                        X_train_cp = X_train.drop(columns=[f'{feature}'])
+                        X_test_cp = X_test.drop(columns=[f'{feature}'])
+                        
+                        train_model(X_train_cp, 
+                                    y_train, 
+                                    X_test_cp, 
+                                    y_test, 
+                                    user_train,
+                                    feature_remove=feature, 
+                                    n_splits=3, 
+                                    path = directory_name, 
+                                    debug = 0,
+                                    models = [model],
+                                    index_name = i)
+                            
+                    df = pd.read_csv(directory_name + f'{i}_results_model.csv')
+                    max_number = df['accuracy'].max()
+                    name_max_number = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs']]
+                
+                    X_train = X_train.drop(columns=[name_max_number['features_remove']])
+                    X_test = X_test.drop(columns=[name_max_number['features_remove']])
+                    
+
+                    REMAIN.append(X_train.columns)
+                    ACC.append(max_number) 
+                    Y_PROBS.append(name_max_number['y_probs'])
+
+                    test_accuracies.append((X_train.columns, max_number, name_max_number['y_probs'])) 
+                    
+                    features = X_train.columns.tolist() 
+                    i += 1
+
+            df = pd.DataFrame({'features': REMAIN, 'accuracy': ACC, 'y_probs': Y_PROBS})
+            df.to_csv(f'/kaggle/working/log/remove/result/{model}.csv', index=False)
+            
+            feature_counts = [len(features) for features, _, _ in test_accuracies]
+            accuracies = [accuracy for _, accuracy, _ in test_accuracies]
+            
             plt.figure(figsize=(8, 5))
             plt.plot(feature_counts, accuracies, marker='o')
             plt.xlabel('Number of Features')
             plt.ylabel(f'Test Accuracy {model}')
             plt.title('Test Accuracy vs. Number of Features (Backward Selection)')
             plt.grid(True)
-            plt.savefig(f'{base_dir}/{model}_acc.png')
-            plt.close()
-    
-            best_features, max_accuracy, best_y_prob = max(test_accuracies, key=lambda x: x[1])
-            save_results_to_csv(result_file, {
-                'Model': [model], 'Best Column': [best_features],
-                'Shape': [len(best_features)], 'Accuracy': [max_accuracy],
-                'Y Probs': [best_y_prob]
-            }, mode='a', header=False)
+            plt.savefig(f'/kaggle/working/log/remove/result/{model}_acc.png')
+            plt.show()
+            
+            best_column, max_accuracy, y_prob = max(test_accuracies, key=lambda x: x[1])
+
+            df_existing = pd.read_csv('/kaggle/working/log/remove/result/result.csv')
+            if df_existing.empty: 
+                df_to_append = pd.DataFrame({
+                    'Model': model,
+                    'Best Column': [best_column],
+                    'Shape': len(best_column),
+                    'Accuracy': max_accuracy,
+                    'Y Probs': [y_prob]
+                })
+                df_to_append.to_csv('/kaggle/working/log/remove/result/result.csv', index=False)
+            else:
+                df_to_append = pd.DataFrame({
+                    'Model': model,
+                    'Best Column': [best_column],
+                    'Shape': len(best_column),
+                    'Accuracy': max_accuracy,
+                    'Y Probs': [y_prob]
+                }, columns=df_existing.columns)
+            # Ghi thêm vào file CSV
+                df_to_append.to_csv('/kaggle/working/log/remove/result/result.csv', mode='a', header=False, index=False)
