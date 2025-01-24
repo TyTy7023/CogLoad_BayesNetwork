@@ -10,7 +10,7 @@ import warnings
 warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
-sys.path.append('/kaggle/working/cogload/processData')
+sys.path.append('/kaggle/working/cogload/processData/')
 from process_Data_to_3D import process3D_Data
 from processing_Data import Preprocessing
 from selection_feature import Feature_Selection
