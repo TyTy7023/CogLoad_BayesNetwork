@@ -8,30 +8,50 @@ from sklearn.metrics import roc_curve, auc
 
 class EDA:
     @staticmethod
-    def draw_ROC_models_read_file(models, y_test,path):
+    # def draw_ROC_models_read_file(models, y_test,path):
+    #     df = pd.read_csv(path)
+    #     y_prob = []
+    #     if path == '/kaggle/working/log/results_model.csv':
+    #         df = pd.read_csv(path)
+    #         # Xử lý để loại bỏ ký tự xuống dòng (\n)
+    #         data_cleaned = df['Y Probs'].str.replace("\n", " ", regex=False)
+    #         data_cleaned = data_cleaned.str.replace("[", "").str.replace("]", "")  # Loại bỏ dấu ngoặc vuông
+    #         # Tách chuỗi và chuyển thành mảng số thực (float)
+    #         for i in range(len(df['Y Probs'].values)):
+    #             cleaned_string = data_cleaned.iloc[i].replace(',', '').replace('[', '').replace(']', '').strip()
+    #             y = np.array([float(x) for x in cleaned_string.split()])
+    #             y_prob.append(y)
+    #     else:
+    #         # Chuyển trực tiếp thành mảng nếu không cần xử lý
+    #         parsed_data = np.array(df['Y Probs'])
+    #         for item in parsed_data:
+    #             # Loại bỏ nháy đơn, nháy kép và dấu ngoặc vuông
+    #             item_cleaned = item.strip("[]").replace('"', '').replace("'", "").split(', ')
+    #             # Chuyển thành danh sách số thực
+    #             prob_values = [float(x) for x in item_cleaned]
+    #             y_prob.append(prob_values)
+    #         y_prob = np.array(y_prob)  # Chuyển thành mảng NumPy 2D
+    #     EDA.draw_ROC(f'/kaggle/working/log/remove/', y_test, y_prob, models)
+    def draw_ROC_models_read_file(models, y_test, path):
         df = pd.read_csv(path)
         y_prob = []
+
         if path == '/kaggle/working/log/results_model.csv':
-            df = pd.read_csv(path)
-            # Xử lý để loại bỏ ký tự xuống dòng (\n)
+            # Xử lý để loại bỏ ký tự xuống dòng và các ký tự không cần thiết
             data_cleaned = df['Y Probs'].str.replace("\n", " ", regex=False)
-            data_cleaned = data_cleaned.str.replace("[", "").str.replace("]", "")  # Loại bỏ dấu ngoặc vuông
-            # Tách chuỗi và chuyển thành mảng số thực (float)
-            for i in range(len(df['Y Probs'].values)):
-                cleaned_string = data_cleaned.iloc[i].replace(',', '').replace('[', '').replace(']', '').strip()
-                y = np.array([float(x) for x in cleaned_string.split()])
-                y_prob.append(y)
+            data_cleaned = data_cleaned.str.replace("[", "", regex=False).str.replace("]", "", regex=False)
+            
+            # Chuyển đổi chuỗi thành mảng số thực
+            y_prob = data_cleaned.apply(lambda x: np.array([float(val) for val in x.split()])).to_list()
         else:
-            # Chuyển trực tiếp thành mảng nếu không cần xử lý
-            parsed_data = np.array(df['Y Probs'])
-            for item in parsed_data:
-                # Loại bỏ nháy đơn, nháy kép và dấu ngoặc vuông
-                item_cleaned = item.strip("[]").replace('"', '').replace("'", "").split(', ')
-                # Chuyển thành danh sách số thực
-                prob_values = [float(x) for x in item_cleaned]
-                y_prob.append(prob_values)
-            y_prob = np.array(y_prob)  # Chuyển thành mảng NumPy 2D
+            # Xử lý khi không cần làm sạch
+            y_prob = df['Y Probs'].apply(
+                lambda x: np.array([float(val) for val in x.strip("[]").replace('"', '').replace("'", "").split(', ')])
+            ).to_list()
+        
+        y_prob = np.array(y_prob)  # Chuyển thành mảng NumPy 2D
         EDA.draw_ROC(f'/kaggle/working/log/remove/', y_test, y_prob, models)
+
 
     @staticmethod
     def _save_plot(path, filename):
