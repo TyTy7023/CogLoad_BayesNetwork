@@ -162,7 +162,7 @@ def combine_and_save(files, output_path, models, y_test):
     combined = pd.concat(dataframes, ignore_index=True)
     combined.to_csv(output_path, index=False)
     # Vẽ biểu đồ ROC
-    EDA.draw_ROC_models(models, y_test, path=output_path)
+    EDA.draw_ROC_models_read_file(models, y_test, path=output_path)
 
 if args.model_selected_feature == 'None':
     input_files = [
