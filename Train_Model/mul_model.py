@@ -124,13 +124,14 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
         print(f"Accuracy all fold: {accuracy_all}\nMean: {accuracy_all.mean()} ---- Std: {accuracy_all.std()}")
 
         log_results.append({
-            "model": model,
-            "accuracy": f"{acc} +- {accuracy_all.std()}",
+            "Model": model,
+            "Accuracy": f"{acc} +- {accuracy_all.std()}",
             "best_model": best_model.best_params,
-            "f1_score": f1Score,
-            "precision": precision,
-            "recall": recall,
-            "confusion_matrix": matrix
+            "F1 Score": f1Score,
+            "Precision": precision,
+            "Recall": recall,
+            "Confusion Matrix": matrix,
+            'Y Probs': [y_pred_proba]
         })
         print("\n===================================================================================================================================\n")
     log_results = pd.DataFrame(log_results)

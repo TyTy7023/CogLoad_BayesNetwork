@@ -45,7 +45,9 @@ args_dict = vars(args)
 log_args = pd.DataFrame([args_dict])
 
 directory_name = '/kaggle/working/log/'
+directory_result = '/kaggle/working/result/'
 if not os.path.exists(directory_name):
+    os.makedirs(directory_result)
     os.makedirs(directory_name)
 file_name = f'args.csv'  
 log_args.to_csv(os.path.join(directory_name, file_name), index=False)
@@ -152,4 +154,31 @@ if len(args.models_network) > 0:
                     n_splits = args.GroupKFold, 
                     debug = args.debug, 
                     models = args.models_network)
+        
+# draw ROC curve
+def combine_and_save(files, output_path, models, y_test):
+    # Đọc và kết hợp các tệp CSV
+    dataframes = [pd.read_csv(file) for file in files]
+    combined = pd.concat(dataframes, ignore_index=True)
+    combined.to_csv(output_path, index=False)
+    # Vẽ biểu đồ ROC
+    EDA.draw_ROC_models(models, y_test, path=output_path)
+
+if args.model_selected_feature == 'None':
+    input_files = [
+        '/kaggle/working/log/results_multi_model.csv',
+        '/kaggle/working/log/results_single_model.csv',
+        '/kaggle/working/log/results_network_model.csv'
+    ]
+    output_file = directory_result + 'results'
+    combine_and_save(input_files, output_file, models, y_test)
+
+elif args.model_selected_feature == 'SBS':
+    input_files = [
+        '/kaggle/working/log/remove/result/result.csv',
+        '/kaggle/working/log/results_network_model.csv'
+    ]
+    output_file = directory_result + 'results'
+    combine_and_save(input_files, output_file, models, y_test)
+
 
