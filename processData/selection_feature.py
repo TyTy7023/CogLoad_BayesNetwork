@@ -137,7 +137,8 @@ class Feature_Selection:
                 
                 df = pd.read_csv(directory_name + f'{i}_results_model.csv')
                 max_accuracy = df['accuracy'].max()
-                name_max_accuracy = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs']]
+                name_max_accuracy = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs', 'f1_score', 'precision', 'recall', 'confusion_matrix']]
+
 
                 REMAIN.append(X_train.columns)
                 ACC.append(max_accuracy) 
@@ -169,7 +170,7 @@ class Feature_Selection:
                             
                     df = pd.read_csv(directory_name + f'{i}_results_model.csv')
                     max_accuracy = df['accuracy'].max()
-                    name_max_accuracy = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs']]
+                    name_max_accuracy = df.loc[df['accuracy'].idxmax(), ['features_remove', 'y_probs', 'f1_score', 'precision', 'recall', 'confusion_matrix']]
                 
                     X_train = X_train.drop(columns=[name_max_accuracy['features_remove']])
                     X_test = X_test.drop(columns=[name_max_accuracy['features_remove']])
