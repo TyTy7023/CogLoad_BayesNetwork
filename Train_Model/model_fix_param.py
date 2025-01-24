@@ -138,9 +138,9 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
 
         # Đánh giá mô hình trên tập kiểm tra
         acc = accuracy_score(y_test, y_pred)
-        precision =[precision_score(y_test, y_pred, average='weighted')]
-        recall = [recall_score(y_test, y_pred, average='weighted')]
-        f1 = [f1_score(y_test, y_pred, average='weighted')]
+        precision =[precision_score(y_test, y_pred)]
+        recall = [recall_score(y_test, y_pred)]
+        f1 = [f1_score(y_test, y_pred)]
         matrix = [confusion_matrix(y_test, y_pred).tolist()]
 
         if not os.path.isfile(f'{path}{index_name}_results_model.csv'):
