@@ -141,7 +141,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
         precision = precision_score(y_test, y_pred, average='weighted')
         recall = recall_score(y_test, y_pred, average='weighted')
         f1 = f1_score(y_test, y_pred, average='weighted')
-        confusion_matrix = confusion_matrix(y_test, y_pred).tolist()
+        matrix = confusion_matrix(y_test, y_pred).tolist()
 
         if not os.path.isfile(f'{path}{index_name}_results_model.csv'):
         # Tạo một DataFrame trống (nếu file cần chứa dữ liệu dạng bảng)
@@ -151,7 +151,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 "precision": precision,
                 "recall": recall,
                 "f1_score": f1,
-                "confusion_matrix": confusion_matrix,
+                "confusion_matrix": matrix,
                 "features_remove": [feature_remove],
                 "y_probs": [y_prob.tolist()]
             })
@@ -165,7 +165,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 "precision": precision,
                 "recall": recall,
                 "f1_score": f1,
-                "confusion_matrix": confusion_matrix,
+                "confusion_matrix": matrix,
                 "features_remove": [feature_remove],
                 "y_probs": [y_prob.tolist()]
             })
@@ -177,7 +177,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 "precision": precision,
                 "recall": recall,
                 "f1_score": f1,
-                "confusion_matrix": confusion_matrix,
+                "confusion_matrix": matrix,
                 "features_remove": [feature_remove],
                 "y_probs": [y_prob.tolist()]
             }, columns=df_existing.columns)
