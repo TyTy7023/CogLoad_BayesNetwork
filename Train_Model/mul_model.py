@@ -123,10 +123,6 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
         accuracy_all = np.array(accuracy_all)
         print(f"Accuracy all fold: {accuracy_all}\nMean: {accuracy_all.mean()} ---- Std: {accuracy_all.std()}")
 
-        if isinstance(y_pred_proba[0], (np.ndarray, list)):
-            y_probs = np.array([[value] for value in y_pred_proba[0]])
-        else:
-            y_probs = np.array([[y_pred_proba[0]]])
         log_results.append({
             "Model": model,
             "Accuracy": f"{acc} +- {accuracy_all.std()}",
@@ -135,7 +131,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
             "Precision": precision,
             "Recall": recall,
             "Confusion Matrix": matrix,
-            'Y Probs': [y_probs]
+            'Y Probs': [y_pred_proba]
         })
         print("\n===================================================================================================================================\n")
     log_results = pd.DataFrame(log_results)
