@@ -65,28 +65,33 @@ class Feature_Selection:
     def selected_SBS(X_train, X_test, y_train, y_test, user_train, models, features_number):
         loop = X_train.shape[1] - 1
         # create folder and file result
-        directory_name = '/kaggle/working/log/remove'
-        if not os.path.exists(directory_name):
-            os.makedirs(directory_name)
-        result = pd.DataFrame({
-            'Model': [],
-            'Best Column': [],
-            'Shape': [],
-            'Accuracy': [],
-            'Y Probs': []
+        def create_directory(path):
+            if not os.path.exists(path):
+                os.makedirs(path)
+            return path
+    
+        def save_results_to_csv(filepath, data, mode='w', header=True):
+            pd.DataFrame(data).to_csv(filepath, mode=mode, header=header, index=False)
+    
+        # Create necessary directories
+        base_dir = create_directory('/kaggle/working/log/remove/result/')
+    
+        result_file = f'{base_dir}result.csv'
+        save_results_to_csv(result_file, {
+            'Model': model,
+            'Best Column': [best_column],
+            'Shape': len(best_column),
+            'Accuracy': max_accuracy,
+            'F1 Score': [f1_score],
+            'Precision': [precision],
+            'Recall': [recall],
+            'Confusion Matrix': [matrix],
+            'Y Probs': [y_prob]
         })
-        result.to_csv('/kaggle/working/log/remove/result/result.csv', index=False)
 
         # create variable
         raw_train = X_train.copy(deep=True)
         raw_test = X_test.copy(deep=True)
-
-        X_train_cp = X_train.copy(deep=True)
-        X_test_cp = X_test.copy(deep=True)
-        features = X_train.columns.tolist() 
-        best_columns = []
-        accs = []
-        y_probs = []
 
         for model in models:
             test_accuracies = []
