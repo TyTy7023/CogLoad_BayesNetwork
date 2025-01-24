@@ -11,7 +11,6 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
 sys.path.append('/kaggle/working/cogload/processData/')
-from process_Data_to_3D import process3D_Data
 from processing_Data import Preprocessing
 from selection_feature import Feature_Selection
 
@@ -128,6 +127,7 @@ if args.model_selected_feature == 'None':
                     models = args.models_mul)
         
 if len(args.models_network) > 0:
+    from process_Data_to_3D import process3D_Data
     preprocessing = process3D_Data(temp_df = temp_df, 
                             hr_df = hr_df, 
                             gsr_df = gsr_df, 
