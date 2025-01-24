@@ -78,15 +78,15 @@ class Feature_Selection:
     
         result_file = f'{base_dir}result.csv'
         save_results_to_csv(result_file, {
-            'Model': model,
-            'Best Column': [best_column],
-            'Shape': len(best_column),
-            'Accuracy': max_accuracy,
-            'F1 Score': [f1_score],
-            'Precision': [precision],
-            'Recall': [recall],
-            'Confusion Matrix': [matrix],
-            'Y Probs': [y_prob]
+            'Model': [],
+            'Best Column': [],
+            'Shape': [],
+            'Accuracy': [],
+            'F1 Score': [],
+            'Precision': [],
+            'Recall': [],
+            'Confusion Matrix': [],
+            'Y Probs': []
         })
 
         # create variable
