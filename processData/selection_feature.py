@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+from joblib import Parallel, delayed
 import warnings
 
 from sklearn.model_selection import GroupKFold
@@ -73,7 +74,6 @@ class Feature_Selection:
     
         # Create necessary directories
         base_dir = create_directory('/kaggle/working/log/remove/result')
-    
         result_file = f'{base_dir}/result.csv'
         save_results_to_csv(result_file, {'Model': [], 'Best Column': [], 'Shape': [], 'Accuracy': [], 'Y Probs': []})
     
@@ -109,16 +109,17 @@ class Feature_Selection:
                 test_accuracies.append((X_train.columns, max_acc, y_prob))
             else:
                 for i in range(X_train.shape[1] - 1):
-                    feature_scores = []
-                    for feature in features:
-                        X_train_cp, X_test_cp = X_train.drop(columns=[feature]), X_test.drop(columns=[feature])
+                    def evaluate_feature(feature):
+                        X_train_cp = X_train.drop(columns=[feature])
+                        X_test_cp = X_test.drop(columns=[feature])
                         train_model(X_train_cp, y_train, X_test_cp, y_test, user_train,
                                     feature_remove=feature, n_splits=3, path=model_dir,
                                     debug=0, models=[model], index_name=i)
-    
                         df = pd.read_csv(f'{model_dir}/{i}_results_model.csv')
-                        feature_scores.append((feature, df['accuracy'].max(),
-                                               df.loc[df['accuracy'].idxmax(), 'y_probs']))
+                        return feature, df['accuracy'].max(), df.loc[df['accuracy'].idxmax(), 'y_probs']
+    
+                    # Parallel processing for feature evaluation
+                    feature_scores = Parallel(n_jobs=-1)(delayed(evaluate_feature)(feature) for feature in features)
     
                     best_feature, max_acc, y_prob = max(feature_scores, key=lambda x: x[1])
                     X_train, X_test = X_train.drop(columns=[best_feature]), X_test.drop(columns=[best_feature])
