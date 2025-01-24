@@ -111,7 +111,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
             "Precision": precision,
             "Recall": recall,
             "Confusion Matrix": matrix,
-            'Y Probs': [y_pred_proba]
+            'Y Probs': [y_pred_proba[:, 1]]
         })
         print("\n===================================================================================================================================\n")
     log_results = pd.DataFrame(log_results)
