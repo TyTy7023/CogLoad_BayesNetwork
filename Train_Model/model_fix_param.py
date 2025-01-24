@@ -131,7 +131,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 best_model = estimator
 
         y_pred = best_model.predict(X_test)
-        if model == 'MLP_Keras':
+        if model == 'MLP_Keras' or model == 'E7GB':
             y_prob = best_model.predict_proba(X_test).flatten()
         else:
             y_prob = best_model.predict_proba(X_test)[:,1]
