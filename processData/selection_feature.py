@@ -152,28 +152,27 @@ class Feature_Selection:
                         'Y Probs': [y_prob]
                     }, mode='a', header=False)
     
-            if test_accuracies:
-                feature_counts = [len(f) for f, _, _ in test_accuracies]
-                accuracies = [a for _, a, _ in test_accuracies]
-    
-                plt.figure(figsize=(8, 5))
-                plt.plot(feature_counts, accuracies, marker='o')
-                plt.xlabel('Number of Features')
-                plt.ylabel(f'Test Accuracy {model}')
-                plt.title('Test Accuracy vs. Number of Features (Backward Selection)')
-                plt.grid(True)
-                plt.savefig(f'{base_dir}/{model}_acc.png')
-                plt.close()
-    
-                best_features, max_accuracy, best_y_prob = max(test_accuracies, key=lambda x: x[1])
-                save_results_to_csv(result_file, {
-                    'Model': [model],
-                    'Best Column': [best_features],
-                    'Shape': [len(best_features)],
-                    'Accuracy': [max_accuracy],
-                    'Precision': [best_precision],
-                    'Recall': [best_recall],
-                    'F1 Score': [best_f1],
-                    'Confusion Matrix': [best_confusion_matrix],
-                    'Y Probs': [best_y_prob]
-                }, mode='a', header=False)
+            feature_counts = [len(f) for f, _, _ in test_accuracies]
+            accuracies = [a for _, a, _ in test_accuracies]
+
+            plt.figure(figsize=(8, 5))
+            plt.plot(feature_counts, accuracies, marker='o')
+            plt.xlabel('Number of Features')
+            plt.ylabel(f'Test Accuracy {model}')
+            plt.title('Test Accuracy vs. Number of Features (Backward Selection)')
+            plt.grid(True)
+            plt.savefig(f'{base_dir}/{model}_acc.png')
+            plt.close()
+
+            best_features, max_accuracy, best_y_prob = max(test_accuracies, key=lambda x: x[1])
+            save_results_to_csv(result_file, {
+                'Model': [model],
+                'Best Column': [best_features],
+                'Shape': [len(best_features)],
+                'Accuracy': [max_accuracy],
+                'Precision': [best_precision],
+                'Recall': [best_recall],
+                'F1 Score': [best_f1],
+                'Confusion Matrix': [best_confusion_matrix],
+                'Y Probs': [best_y_prob]
+            }, mode='a', header=False)
