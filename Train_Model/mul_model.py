@@ -123,7 +123,6 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
         accuracy_all = np.array(accuracy_all)
         print(f"Accuracy all fold: {accuracy_all}\nMean: {accuracy_all.mean()} ---- Std: {accuracy_all.std()}")
 
-        f1Score = ','.join(map(str, f1Score))
         log_results.append({
             "model": model,
             "accuracy": f"{acc} +- {accuracy_all.std()}",
