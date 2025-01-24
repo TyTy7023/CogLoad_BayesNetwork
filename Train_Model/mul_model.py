@@ -5,7 +5,7 @@ import itertools
 import random
 
 from sklearn.model_selection import GroupKFold
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score, confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 
@@ -109,15 +109,15 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
 
         # Đánh giá mô hình trên tập kiểm tra
         acc = accuracy_score(y_test, y_pred)
-        conf_matrix = confusion_matrix(y_test, y_pred)
-        class_report = classification_report(y_test, y_pred)
-        f1Score = f1_score(y_test, y_pred, average=None)
+        precision =[precision_score(y_test, y_pred)]
+        recall = [recall_score(y_test, y_pred)]
+        matrix = [confusion_matrix(y_test, y_pred).tolist()]
+        f1Score = f1_score(y_test, y_pred)
 
         test_accuracy_models.append(acc)
         accuracies_all.extend(accuracy_all)
         f1_score_models.append(f1Score.mean())
 
-        print("Report:" + class_report)
         print(f"ACCURACY: {acc}")
 
         accuracy_all = np.array(accuracy_all)
@@ -129,7 +129,9 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
             "accuracy": f"{acc} +- {accuracy_all.std()}",
             "best_model": best_model.best_params,
             "f1_score": f1Score,
-            "confusion_matrix": conf_matrix
+            "precision": precision,
+            "recall": recall,
+            "confusion_matrix": matrix
         })
         print("\n===================================================================================================================================\n")
     log_results = pd.DataFrame(log_results)
