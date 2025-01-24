@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 from sklearn.model_selection import GroupKFold
-from sklearn.metrics import classification_report, accuracy_score, log_loss
+from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score, confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 
@@ -138,13 +138,20 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
 
         # Đánh giá mô hình trên tập kiểm tra
         acc = accuracy_score(y_test, y_pred)
-        
+        precision = precision_score(y_test, y_pred, average='weighted')
+        recall = recall_score(y_test, y_pred, average='weighted')
+        f1_score = f1_score(y_test, y_pred, average='weighted')
+        confusion_matrix = confusion_matrix(y_test, y_pred).tolist()
 
         if not os.path.isfile(f'{path}{index_name}_results_model.csv'):
         # Tạo một DataFrame trống (nếu file cần chứa dữ liệu dạng bảng)
             df = pd.DataFrame({
                 "model": model,
                 "accuracy": f"{acc}",
+                "precision": precision,
+                "recall": recall,
+                "f1_score": f1_score,
+                "confusion_matrix": confusion_matrix,
                 "features_remove": [feature_remove],
                 "y_probs": [y_prob.tolist()]
             })
@@ -155,16 +162,24 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
             df_to_append = pd.DataFrame({
                 "model": model,
                 "accuracy": f"{acc}",
+                "precision": precision,
+                "recall": recall,
+                "f1_score": f1_score,
+                "confusion_matrix": confusion_matrix,
                 "features_remove": [feature_remove],
                 "y_probs": [y_prob.tolist()]
             })
             df_to_append.to_csv(f'{path}{index_name}_results_model.csv', index=False)
         else:
             df_to_append = pd.DataFrame({
-            "model": model,
-            "accuracy": f"{acc}",
-            "features_remove": [feature_remove],
-            "y_probs": [y_prob.tolist()]
+                "model": model,
+                "accuracy": f"{acc}",
+                "precision": precision,
+                "recall": recall,
+                "f1_score": f1_score,
+                "confusion_matrix": confusion_matrix,
+                "features_remove": [feature_remove],
+                "y_probs": [y_prob.tolist()]
             }, columns=df_existing.columns)
         # Ghi thêm vào file CSV
             df_to_append.to_csv(f'{path}{index_name}_results_model.csv', mode='a', header=False, index=False)
