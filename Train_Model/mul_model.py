@@ -101,11 +101,12 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
         # Dự đoán trên tập kiểm tra
         print(f"Best parameters found: {best_model.best_params}\n")
         y_pred = best_model.predict(X_test)
-        y_pred_proba = best_model.predict_proba(X_test)
         if model == 'MLP_Keras' or model == 'E7GB':
+            y_pred_proba = best_model.predict_proba(X_test)
             y_pred_tests.append(y_pred_proba)
         else: 
-            y_pred_tests.append(y_pred_proba[:, 1])
+            y_pred_proba = best_model.predict_proba(X_test)[:, 1]
+            y_pred_tests.append(y_pred_proba)
 
         # Đánh giá mô hình trên tập kiểm tra
         acc = accuracy_score(y_test, y_pred)
