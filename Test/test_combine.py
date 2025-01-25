@@ -91,6 +91,7 @@ if args.model_selected_feature == 'SBS':
                                                    y_train = y_train, 
                                                    y_test = y_test, 
                                                    user_train = user_train,
+                                                   user_test = user_test,
                                                     models = models,
                                                     features_number = args.k_features
                                                    )
