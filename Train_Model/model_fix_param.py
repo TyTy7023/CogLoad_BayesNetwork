@@ -22,7 +22,7 @@ from EDA import EDA
 
 sys.path.append('/kaggle/working/cogload/model/')
 
-def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remove = ['None'], n_splits=3 , debug = 0, models = ['LDA', 'SVM', 'RF'], index_name = 1):
+def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, feature_remove = ['None'], n_splits=3 , debug = 0, models = ['LDA', 'SVM', 'RF'], index_name = 1):
         # K-Fold Cross-Validation với 6 folds
     kf = GroupKFold(n_splits=n_splits)
 
@@ -111,7 +111,13 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
             
-            
+            elif model == 'WGLR':
+                from Model.WGLR import WeightedRegression
+                estimator = WeightedRegression(weight=0.7)
+                estimator.fit(X_train_fold, y_train_fold, train_groups)
+                estimator.optimize_weight(X = X_train_fold,y = y_train_fold, group_ids = train_groups)
+                y_pred_prob = estimator.predict_proba(X_val_fold, val_groups)
+
             elif model == 'TabNet':
                 from Model.TabNet_fix_param import TabNet
                 estimator = TabNet()
@@ -121,7 +127,10 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
             else:
                 raise ValueError(f"Model {model} is not supported")
             
-            y_val_pred = estimator.predict(X_val_fold)
+            if model == 'WGLR':
+                y_val_pred = estimator.predict(y_val_fold, y_pred_prob)
+            else:
+                y_val_pred = estimator.predict(X_val_fold)
             y_pred_vals.append(y_pred_prob)
 
             accuracy = accuracy_score(y_val_fold, y_val_pred)
@@ -130,10 +139,16 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, feature_remo
                 best_score = accuracy
                 best_model = estimator
 
-        y_pred = best_model.predict(X_test)
         if model == 'MLP_Keras' or model == 'E7GB':
+            y_pred = best_model.predict(X_test)
             y_prob = best_model.predict_proba(X_test).flatten()
+
+        elif model == 'WGLR':
+            y_prob = best_model.predict_proba(X_test, user_test)
+            y_pred = best_model.predict(y_test, y_prob)
+
         else:
+            y_pred = best_model.predict(X_test)
             y_prob = best_model.predict_proba(X_test)[:,1]
 
         # Đánh giá mô hình trên tập kiểm tra

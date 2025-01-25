@@ -101,13 +101,14 @@ if(args.model_selected_feature == "SFS"):
                                                      )
 if args.model_selected_feature == 'SBS':
     Feature_Selection = Feature_Selection.selected_SBS(X_train = X_train,
-                                                   X_test = X_test, 
-                                                   y_train = y_train, 
-                                                   y_test = y_test, 
-                                                   user_train = user_train,
-                                                    models = models,
-                                                    features_number = args.k_features
-                                                   )
+                                                        X_test = X_test, 
+                                                        y_train = y_train, 
+                                                        y_test = y_test, 
+                                                        user_train = user_train,
+                                                        user_test = user_test,
+                                                        models = models,
+                                                        features_number = args.k_features
+                                                    )
 
     print(f'X_train : {X_train.shape}\n\n')
     X_train.to_csv('/kaggle/working/X_train_Selected.csv', index=False)
