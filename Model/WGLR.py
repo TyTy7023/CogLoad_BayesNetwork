@@ -84,7 +84,7 @@ class WeightedRegression:
         """
         def weighted_mse(weight):
             self.weight = weight
-            y_pred = self.predict(X, group_ids)
+            y_pred = self.predict_proba(X, group_ids)
             return mean_squared_error(y, y_pred)
 
         from scipy.optimize import minimize
