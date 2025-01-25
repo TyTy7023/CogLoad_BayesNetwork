@@ -123,6 +123,7 @@ if args.model_selected_feature == 'None':
                     X_test = X_test, 
                     y_test = y_test, 
                     user_train = user_train,
+                    user_test = user_test,
                     path = directory_name, 
                     n_splits = args.GroupKFold, 
                     debug = args.debug, 
