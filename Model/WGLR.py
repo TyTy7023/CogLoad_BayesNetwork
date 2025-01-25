@@ -92,7 +92,7 @@ class WeightedRegression:
         self.weight = result.x[0]
         self.best_params = self.weight
     
-    def predict(y_true, y_prob):
+    def predict(self, y_true, y_prob):
         thresholds = np.linspace(min(y_prob), max(y_prob), 100)  # Thử nghiệm 100 ngưỡng
         best_accuracy = 0
         best_predict = None
