@@ -87,7 +87,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, n
             elif model == 'WGLR':
                 estimator = WeightedRegression(weight=0.7)
                 estimator.fit(X_train_fold, y_train_fold, train_groups)
-                estimator.optimize_weight(X_train_fold, y_train_fold, train_groups)
+                estimator.optimize_weight(X = X_train_fold,y = y_train_fold, group_ids = train_groups)
                 y_pred_prob = estimator.predict_proba(X_val_fold, val_groups)
 
             else:
