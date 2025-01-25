@@ -18,8 +18,9 @@ from MLP import MLP
 from TabNet import TabNet
 from E7GB import EnsembleModel_7GB
 from ESVM import ESVM
+from WGLR import WeightedRegression
 
-def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['MLP_Sklearn', 'MLP_Keras','TabNet', 'E7GB', 'ESVM']):
+def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, n_splits=3 , debug = 0, models = ['MLP_Sklearn', 'MLP_Keras','TabNet', 'E7GB', 'ESVM', 'WGLR']):
     np.random.seed(42)
     path = os.path.dirname(path)
     path_EDA = path + '/EDA/multi_model/'
@@ -82,12 +83,21 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
                 estimator = ESVM()
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
-            
+
+            elif model == 'WGLR':
+                estimator = WeightedRegression(weight=0.7)
+                estimator.fit(X_train_fold, y_train_fold, train_groups)
+                estimator.optimize_weight(X_train_fold, y_train_fold, train_groups)
+                y_pred_prob = estimator.predict_proba(X_val_fold, val_groups)
+
             else:
                 raise ValueError(f"Model {model} is not supported")
+            
             y_pred_vals.append(y_pred_prob)
-
-            y_val_pred = estimator.predict(X_val_fold)
+            if model == 'WGLR':
+                y_val_pred = estimator.predict(y_val_fold, y_pred_prob)
+            else:
+                y_val_pred = estimator.predict(X_val_fold)
             accuracy = accuracy_score(y_val_fold, y_val_pred)
             accuracy_all.append(accuracy)
 
@@ -100,11 +110,18 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
 
         # Dự đoán trên tập kiểm tra
         print(f"Best parameters found: {best_model.best_params}\n")
-        y_pred = best_model.predict(X_test)
         if model == 'MLP_Keras' or model == 'E7GB':
+            y_pred = best_model.predict(X_test)
             y_pred_proba = best_model.predict_proba(X_test)
             y_pred_tests.append(y_pred_proba)
+            
+        if model == 'WGLR':
+            y_pred_proba = best_model.predict_proba(X_test, user_test)
+            y_pred = best_model.predict(X_test, y_pred_proba)
+            y_pred_tests.append(y_pred_proba)
+
         else: 
+            y_pred = best_model.predict(X_test)
             y_pred_proba = best_model.predict_proba(X_test)[:, 1]
             y_pred_tests.append(y_pred_proba)
 

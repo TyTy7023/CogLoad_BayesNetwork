@@ -76,7 +76,7 @@ from sklearn.metrics import accuracy_score
 model = WeightedRegression(weight=0.7)
 model.fit(X_train, y_train, user_train)
 
-predictions = model.predict(X_test, user_test)
+predictions = model.predict_proba(X_test, user_test)
 # Hàm tìm ngưỡng tối ưu
 def find_optimal_threshold(y_true, y_pred):
     thresholds = np.linspace(min(y_pred), max(y_pred), 100)  # Thử nghiệm 100 ngưỡng
@@ -94,7 +94,7 @@ def find_optimal_threshold(y_true, y_pred):
 
 # Predict and optimize weight
 best_weight = model.optimize_weight(X_train, y_train, user_train)
-optimized_predictions = model.predict(X_test, user_test)
+optimized_predictions = model.predict_proba(X_test, user_test)
 optimal_threshold, optimal_accuracy = find_optimal_threshold(y_test, optimized_predictions)
 
 print("Accuracy with Optimal Threshold:", optimal_accuracy)
