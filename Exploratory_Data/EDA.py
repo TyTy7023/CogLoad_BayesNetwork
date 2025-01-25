@@ -11,14 +11,21 @@ class EDA:
     def draw_ROC_models_read_file(models, y_test,path):
         df = pd.read_csv(path)
         y_prob = []
-        if path == '/kaggle/working/result/results.csv':
-            df = pd.read_csv(path)
+        if path == '/kaggle/working/result/results':
             # Xử lý để loại bỏ ký tự xuống dòng (\n)
             data_cleaned = df['Y Probs'].str.replace("\n", " ", regex=False)
+            # Loại bỏ phần 'array(', ')', và 'dtype=float32'
+            data_cleaned = (
+                data_cleaned
+                .str.replace("array(", "", regex=False)
+                .str.replace("dtype=float32", "", regex=False)
+                .str.replace(")", "", regex=False)
+            )
             data_cleaned = data_cleaned.str.replace("[", "").str.replace("]", "")  # Loại bỏ dấu ngoặc vuông
+            
             # Tách chuỗi và chuyển thành mảng số thực (float)
-            for i in range(len(df['Y Probs'].values)):
-                cleaned_string = data_cleaned.iloc[i].replace(',', '').replace('[', '').replace(']', '').strip()
+            for i in range(len(data_cleaned)):
+                cleaned_string = data_cleaned.iloc[i].replace(',', '').strip()
                 y = np.array([float(x) for x in cleaned_string.split()])
                 y_prob.append(y)
         else:
