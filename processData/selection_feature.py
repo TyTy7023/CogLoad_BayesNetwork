@@ -128,6 +128,7 @@ class Feature_Selection:
                             X_test, 
                             y_test, 
                             user_train,
+                            user_test,
                             feature_remove='---', 
                             n_splits=3, 
                             path = directory_name, 
