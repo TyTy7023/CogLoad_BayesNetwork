@@ -115,7 +115,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, n
             y_pred_proba = best_model.predict_proba(X_test)
             y_pred_tests.append(y_pred_proba)
             
-        if model == 'WGLR':
+        elif model == 'WGLR':
             y_pred_proba = best_model.predict_proba(X_test, user_test)
             y_pred = best_model.predict(y_test, y_pred_proba)
             y_pred_tests.append(y_pred_proba)
