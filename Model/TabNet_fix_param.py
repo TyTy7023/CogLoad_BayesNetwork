@@ -1,11 +1,6 @@
-import subprocess
 import sys
-
-def install_and_import(package):
-    try:
-        __import__(package)
-    except ImportError:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+sys.path.append('/kaggle/working/cogload/install_library')
+from install_library import install_and_import
 
 # Cài đặt và import thư viện
 install_and_import("pytorch_tabnet")
