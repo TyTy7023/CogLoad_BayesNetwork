@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow.keras import models, layers
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau
+from sklearn.metrics import accuracy_score, classification_report
 random.seed(42)
 np.random.seed(42)
 tf.random.set_seed(42)

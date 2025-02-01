@@ -1,8 +1,11 @@
+
 import warnings
 from tensorflow import get_logger
 import numpy as np
+import subprocess
 import sys
 import random
+import itertools
 import tensorflow as tf
 
 random.seed(42)
@@ -19,12 +22,15 @@ from sklearn.neural_network import MLPClassifier
 from keras.backend import clear_session
 from sklearn.model_selection import RandomizedSearchCV, GroupKFold
 
-sys.path.append('/kaggle/working/cogload/install_library')
-from install_library import install_and_import
-
 class MLP:
     class MLP_Keras:
         def __init__(self):            
+            def install_and_import(package):
+                try:
+                    __import__(package)
+                except ImportError:
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
             # Cài đặt và import thư viện
             install_and_import("scikeras")
             install_and_import("keras-tuner")

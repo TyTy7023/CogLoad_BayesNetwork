@@ -166,20 +166,21 @@ def combine_and_save(files, output_path, models, y_test):
     # Vẽ biểu đồ ROC
     EDA.draw_ROC_models_read_file(models, y_test, path=output_path)
 
-if len(args.models_single) > 0 and len(args.models_mul) > 0 and len(args.models_network) > 0:
-    if args.model_selected_feature == 'None':
-        input_files = [
-            '/kaggle/working/log/results_multi_model.csv',
-            '/kaggle/working/log/results_single_model.csv',
-            '/kaggle/working/log/results_network_model.csv'
-        ]
-        output_file = directory_result + 'results'
-        combine_and_save(input_files, output_file, models + args.models_network, y_test)
+if args.model_selected_feature == 'None':
+    input_files = [
+        '/kaggle/working/log/results_multi_model.csv',
+        '/kaggle/working/log/results_single_model.csv',
+        '/kaggle/working/log/results_network_model.csv'
+    ]
+    output_file = directory_result + 'results'
+    combine_and_save(input_files, output_file, models + args.models_network, y_test)
 
-    elif args.model_selected_feature == 'SBS':
-        input_files = [
-            '/kaggle/working/log/remove/result/result.csv',
-            '/kaggle/working/log/results_network_model.csv'
-        ]
-        output_file = directory_result + 'results'
-        combine_and_save(input_files, output_file, models + args.models_network, y_test)
+elif args.model_selected_feature == 'SBS':
+    input_files = [
+        '/kaggle/working/log/remove/result/result.csv',
+        '/kaggle/working/log/results_network_model.csv'
+    ]
+    output_file = directory_result + 'results'
+    combine_and_save(input_files, output_file, models + args.models_network, y_test)
+
+

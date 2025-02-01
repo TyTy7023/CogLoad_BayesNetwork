@@ -13,13 +13,18 @@ from keras_tuner import RandomSearch
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import RandomizedSearchCV, GroupKFold
 
-import sys
-sys.path.append('/kaggle/working/cogload/install_library')
-from install_library import install_and_import
-
 class MLP:
     class MLP_Keras:
         def __init__(self):
+            import subprocess
+            import sys
+
+            def install_and_import(package):
+                try:
+                    __import__(package)
+                except ImportError:
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
             # Cài đặt và import thư viện
             install_and_import("scikeras")
 
