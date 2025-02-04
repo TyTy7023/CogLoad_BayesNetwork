@@ -91,22 +91,9 @@ def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, f
                 y_pred_prob = estimator.predict_proba(X_val_fold)
 
             elif model == 'ESVM':
-                from Model.ESVM import ESVM
-                fixed_params = {
-                    'pca__n_components': 27,
-                    'svc__C': 0.43870109921004274,
-                    'svc__kernel': 'rbf',
-                    'svc__gamma': 0.002783953864803332,
-                    'adaboost__n_estimators': 84,
-                    'adaboost__learning_rate': 0.1386418527387466
-                }
+                from Model.ESVM_fix_param import ESVM
                 # Tạo đối tượng ESVM
                 estimator = ESVM()
-
-                # Khởi tạo mô hình với tham số cố định
-                estimator.best_params = fixed_params
-                estimator.best_model = estimator.build(fixed_params)
-                
                 # Huấn luyện mô hình với dữ liệu
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
