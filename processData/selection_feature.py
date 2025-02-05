@@ -104,7 +104,6 @@ class Feature_Selection:
             X_test_cp = raw_test.copy(deep=True)
             X_train = X_train_cp.copy(deep=True)
             X_test = X_test_cp.copy(deep=True)
-            features = X_train.columns.tolist()
 
             print(f"MODEL: {model} - SHAPE: {X_train.shape}")
 
@@ -163,6 +162,8 @@ class Feature_Selection:
                                                 )
                     
                 loop = X_train.shape[1] - 1
+                features = X_train.columns.tolist()
+
                 while(i<loop):
                     for feature in features:
                         X_train_cp = X_train.drop(columns=[f'{feature}'])

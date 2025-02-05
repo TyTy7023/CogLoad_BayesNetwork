@@ -12,7 +12,7 @@ class ESVM:
     def build(self):
         # Cấu hình cố định
         config = {
-            'pca__n_components': 35,
+            'pca__n_components': min(35, self.X_train.shape[0], self.X_train.shape[1]) ,
             'svc__C': 0.6295660257538724,
             'svc__kernel': 'rbf',
             'svc__gamma': 0.09798977145917381,
@@ -32,6 +32,7 @@ class ESVM:
         return pipeline
 
     def fit(self, X_train, y_train):
+        self.X_train = X_train
         self.best_model = self.build()
         self.best_model.fit(X_train, y_train)
 
