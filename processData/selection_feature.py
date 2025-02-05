@@ -61,7 +61,6 @@ class Feature_Selection:
 
     @staticmethod
     def selected_SBS(X_train, X_test, y_train, y_test, user_train, user_test, models, features_number):
-        loop = X_train.shape[1] - 1
         # create folder and file result
         def create_directory(path):
             if not os.path.exists(path):
@@ -113,6 +112,7 @@ class Feature_Selection:
             directory_name = f'/kaggle/working/log/remove/{model}/'
             if not os.path.exists(directory_name):
                 os.makedirs(directory_name)
+
             if model == 'MLP_Keras':
                 X_train, X_test = Feature_Selection.selected_SFS(X_train = X_train,
                                                 X_test = X_test, 
@@ -152,6 +152,17 @@ class Feature_Selection:
                 test_accuracies.append((X_train.columns, max_accuracy, name_max_accuracy['y_probs'], name_max_accuracy['f1_score'], name_max_accuracy['precision'], name_max_accuracy['recall'], name_max_accuracy['confusion_matrix'])) 
                 
             else:
+                if model == 'ESVM':
+                    X_train, X_test = Feature_Selection.selected_SFS(X_train = X_train,
+                                                X_test = X_test, 
+                                                y_train = y_train,
+                                                model = SVC(kernel='linear'),
+                                                k_features = 20, 
+                                                forward = False,
+                                                floating = True
+                                                )
+                    
+                loop = X_train.shape[1] - 1
                 while(i<loop):
                     for feature in features:
                         X_train_cp = X_train.drop(columns=[f'{feature}'])
