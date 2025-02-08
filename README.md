@@ -18,6 +18,7 @@
     + CNN.py - Mạng nơ-ron tích chập (Convolutional Neural Network).
     + E7GB.py - Mô hình Ensemble Gradient Boosting (E7GB).
     + ESVM.py - Mô hình SVM (Support Vector Machine) cải tiến.
+    + ESVM_fix_param.py - Mô hình SVM (Support Vector Machine) với tham số cố định.
     + MLP_fix_param.py - Mạng nơ-ron MLP (Multi-Layer Perceptron) với tham số cố định.
     + MLP.py - Mô hình MLP với các tham số có thể điều chỉnh.
     + RNN.py - Mạng nơ-ron hồi tiếp (Recurrent Neural Network).
