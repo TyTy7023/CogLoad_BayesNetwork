@@ -1,11 +1,45 @@
 import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import roc_curve, auc
 
 
 class EDA:
+    @staticmethod
+    def draw_ROC_models_read_file(models, y_test,path):
+        df = pd.read_csv(path)
+        y_prob = []
+        if path == '/kaggle/working/result/results':
+            # Xử lý để loại bỏ ký tự xuống dòng (\n)
+            data_cleaned = df['Y Probs'].str.replace("\n", " ", regex=False)
+            # Loại bỏ phần 'array(', ')', và 'dtype=float32'
+            data_cleaned = (
+                data_cleaned
+                .str.replace("array(", "", regex=False)
+                .str.replace("dtype=float32", "", regex=False)
+                .str.replace(")", "", regex=False)
+            )
+            data_cleaned = data_cleaned.str.replace("[", "").str.replace("]", "")  # Loại bỏ dấu ngoặc vuông
+            
+            # Tách chuỗi và chuyển thành mảng số thực (float)
+            for i in range(len(data_cleaned)):
+                cleaned_string = data_cleaned.iloc[i].replace(',', '').strip()
+                y = np.array([float(x) for x in cleaned_string.split()])
+                y_prob.append(y)
+        else:
+            # Chuyển trực tiếp thành mảng nếu không cần xử lý
+            parsed_data = np.array(df['Y Probs'])
+            for item in parsed_data:
+                # Loại bỏ nháy đơn, nháy kép và dấu ngoặc vuông
+                item_cleaned = item.strip("[]").replace('"', '').replace("'", "").split(', ')
+                # Chuyển thành danh sách số thực
+                prob_values = [float(x) for x in item_cleaned]
+                y_prob.append(prob_values)
+            y_prob = np.array(y_prob)  # Chuyển thành mảng NumPy 2D
+        EDA.draw_ROC(os.path.dirname(path), y_test, y_prob, models)
+
     @staticmethod
     def _save_plot(path, filename):
         """Lưu biểu đồ vào thư mục được chỉ định."""
@@ -69,3 +103,31 @@ class EDA:
         plt.ylabel(f'{Type} (Test)')
         plt.xticks(rotation=90)
         EDA._save_plot(path, Type)
+
+    @staticmethod
+    def draw_3D_Data(path, data):
+        depth = data.shape[0]  # Số lượng lát cắt (632)
+        rows = int(np.ceil(np.sqrt(depth)))  # Số hàng cho lưới subplots
+        cols = rows  # Số cột cho lưới subplots
+
+        # Tạo hình ảnh subplots
+        fig, axes = plt.subplots(rows, cols, figsize=(20, 20))
+        axes = axes.flatten()  # Chuyển mảng axes thành 1D để dễ xử lý
+
+        for i in range(depth):
+            ax = axes[i]
+            im = ax.imshow(data[i], aspect='auto', cmap='viridis')  # Hiển thị lát cắt i
+            ax.set_title(f"Slice {i}", fontsize=8)
+            ax.axis('off')  # Tắt trục tọa độ
+
+        # Xóa các ô subplot thừa (nếu có)
+        for i in range(depth, len(axes)):
+            fig.delaxes(axes[i])
+
+        # Thêm thanh màu chung (colorbar)
+        fig.colorbar(im, ax=axes, orientation='vertical', fraction=0.02, pad=0.04)
+
+        # Hiển thị hình ảnh
+        plt.tight_layout()
+        EDA._save_plot(path, 'DATA_3D')
+

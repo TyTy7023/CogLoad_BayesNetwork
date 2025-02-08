@@ -5,7 +5,7 @@ import itertools
 import random
 
 from sklearn.model_selection import GroupKFold
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score, confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 
@@ -14,15 +14,16 @@ sys.path.append('/kaggle/working/cogload/Exploratory_Data')
 from EDA import EDA
 
 sys.path.append('/kaggle/working/cogload/Model')
-from MLP_model import MLP
-from Tabnet_model import TabNet
+from MLP import MLP
+from TabNet import TabNet
 from E7GB import EnsembleModel_7GB
 from ESVM import ESVM
+from WGLR import WeightedRegression
 
-def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 , debug = 0, models = ['MLP_Sklearn', 'MLP_Keras','TabNet', 'E7GB', 'ESVM']):
+def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, n_splits=3 , debug = 0, models = ['MLP_Sklearn', 'MLP_Keras','TabNet', 'E7GB', 'ESVM', 'WGLR']):
     np.random.seed(42)
     path = os.path.dirname(path)
-    path_EDA = path + '/EDA/'
+    path_EDA = path + '/EDA/multi_model/'
 
     if debug == 1:
         models = models[:2]
@@ -82,12 +83,21 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
                 estimator = ESVM()
                 estimator.fit(X_train_fold, y_train_fold)
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
-            
+
+            elif model == 'WGLR':
+                estimator = WeightedRegression(weight=0.7)
+                estimator.fit(X_train_fold, y_train_fold, train_groups)
+                estimator.optimize_weight(X = X_train_fold,y = y_train_fold, group_ids = train_groups)
+                y_pred_prob = estimator.predict_proba(X_val_fold, val_groups)
+
             else:
                 raise ValueError(f"Model {model} is not supported")
+            
             y_pred_vals.append(y_pred_prob)
-
-            y_val_pred = estimator.predict(X_val_fold)
+            if model == 'WGLR':
+                y_val_pred = estimator.predict(y_val_fold, y_pred_prob)
+            else:
+                y_val_pred = estimator.predict(X_val_fold)
             accuracy = accuracy_score(y_val_fold, y_val_pred)
             accuracy_all.append(accuracy)
 
@@ -100,36 +110,46 @@ def train_model(X_train, y_train, X_test, y_test, user_train, path, n_splits=3 ,
 
         # Dự đoán trên tập kiểm tra
         print(f"Best parameters found: {best_model.best_params}\n")
-        y_pred = best_model.predict(X_test)
-        y_pred_proba = best_model.predict_proba(X_test)
         if model == 'MLP_Keras' or model == 'E7GB':
+            y_pred = best_model.predict(X_test)
+            y_pred_proba = best_model.predict_proba(X_test)
             y_pred_tests.append(y_pred_proba)
+            
+        elif model == 'WGLR':
+            y_pred_proba = best_model.predict_proba(X_test, user_test)
+            y_pred = best_model.predict(y_test, y_pred_proba)
+            y_pred_tests.append(y_pred_proba)
+
         else: 
-            y_pred_tests.append(y_pred_proba[:, 1])
+            y_pred = best_model.predict(X_test)
+            y_pred_proba = best_model.predict_proba(X_test)[:, 1]
+            y_pred_tests.append(y_pred_proba)
 
         # Đánh giá mô hình trên tập kiểm tra
         acc = accuracy_score(y_test, y_pred)
-        conf_matrix = confusion_matrix(y_test, y_pred)
-        class_report = classification_report(y_test, y_pred)
-        f1Score = f1_score(y_test, y_pred, average=None)
+        precision =[precision_score(y_test, y_pred)]
+        recall = [recall_score(y_test, y_pred)]
+        matrix = [confusion_matrix(y_test, y_pred).tolist()]
+        f1Score = f1_score(y_test, y_pred)
 
         test_accuracy_models.append(acc)
         accuracies_all.extend(accuracy_all)
         f1_score_models.append(f1Score.mean())
 
-        print("Report:" + class_report)
         print(f"ACCURACY: {acc}")
 
         accuracy_all = np.array(accuracy_all)
         print(f"Accuracy all fold: {accuracy_all}\nMean: {accuracy_all.mean()} ---- Std: {accuracy_all.std()}")
 
-        f1Score = ','.join(map(str, f1Score))
         log_results.append({
-            "model": model,
-            "accuracy": f"{acc} +- {accuracy_all.std()}",
+            "Model": model,
+            "Accuracy": f"{acc} +- {accuracy_all.std()}",
             "best_model": best_model.best_params,
-            "f1_score": f1Score,
-            "confusion_matrix": conf_matrix
+            "F1 Score": f1Score,
+            "Precision": precision,
+            "Recall": recall,
+            "Confusion Matrix": matrix,
+            'Y Probs': [y_pred_proba]
         })
         print("\n===================================================================================================================================\n")
     log_results = pd.DataFrame(log_results)

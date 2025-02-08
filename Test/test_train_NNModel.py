@@ -2,9 +2,8 @@
 import os
 import ast
 from datetime import datetime
-#data analysis and manipulation library
+import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 from argparse import ArgumentParser
 
 import warnings
@@ -12,10 +11,12 @@ warnings.simplefilter("ignore")#ignore warnings during executiona
 
 import sys
 sys.path.append('/kaggle/working/cogload/processData')
-from processing_Data import Preprocessing
+from process_Data_to_3D import process3D_Data
 
-sys.path.append('/kaggle/working/cogload/Model')
-from WGLR import WeightedRegression
+sys.path.append('/kaggle/working/cogload/Exploratory_Data/')
+from EDA import EDA 
+
+sys.path.append('/kaggle/working/cogload/Train_Model/')
 
 #argument parser
 parser = ArgumentParser()
@@ -30,9 +31,10 @@ parser.add_argument("--floating", default = True, type = bool, help = "True to u
 # parser.add_argument("--split", nargs='+', default=[1] , type=int, help="the split of data example 2 6 to split data into 2 and 6 to extract feature")
 parser.add_argument("--estimator_RFECV", default='SVM', type=str, help="model for RFECV")
 parser.add_argument("--debug", default = 0, type = int, help="debug mode 0: no debug, 1: debug")
-# parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
-# parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
-parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
+parser.add_argument("--models_single", nargs='+', default=[] , type=str, help="models to train, 'LDA', 'SVM', 'RF','XGB'")
+parser.add_argument("--models_mul", nargs='+', default=[] , type=str, help="models to train, 'MLP_Sklearn', 'MLP_Keras','TabNet'")
+parser.add_argument("--models_network", nargs='+', default=[] , type=str, help="models to train, 'CNN', 'RNN'")
+# parser.add_argument("--models", nargs='+', default=[] , type=str, help="models to train")
 parser.add_argument("--expert_lib",default='None' , type=str, help=" is the library used to extract expert features (None, 'nk', 'analysis_pyteap', 'HRV_nk', 'HRV_analysis', 'EDA_nk', 'pyteap', 'both')")
 
 args = parser.parse_args()
@@ -59,8 +61,8 @@ print('Heart Rate',hr_df.shape)
 print('GSR',gsr_df.shape)
 print('RR',rr_df.shape)
 
-# Xử lý dữ liệu
-preprocessing = Preprocessing(temp_df = temp_df, 
+#Processing data
+preprocessing = process3D_Data(temp_df = temp_df, 
                               hr_df = hr_df, 
                               gsr_df = gsr_df, 
                               rr_df = rr_df, 
@@ -68,33 +70,19 @@ preprocessing = Preprocessing(temp_df = temp_df,
                               window_size = args.window_size, 
                               normalize = args.normalize, 
                               expert_lib= args.expert_lib)
-X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove='None')
+X_train, y_train, X_test, y_test, user_train, user_test = preprocessing.get_data(features_to_remove = 'None')
 
-# Example usage:
-# Initialize and fit the model
-from sklearn.metrics import accuracy_score
-model = WeightedRegression(weight=0.7)
-model.fit(X_train, y_train, user_train)
+print(f'X_train: {X_train.shape}')
+EDA.draw_3D_Data(directory_name, X_train)
 
-predictions = model.predict_proba(X_test, user_test)
-# Hàm tìm ngưỡng tối ưu
-def find_optimal_threshold(y_true, y_pred):
-    thresholds = np.linspace(min(y_pred), max(y_pred), 100)  # Thử nghiệm 100 ngưỡng
-    best_threshold = thresholds[0]
-    best_accuracy = 0
-
-    for threshold in thresholds:
-        predicted_classes = (y_pred >= threshold).astype(int)
-        accuracy = accuracy_score(y_true, predicted_classes)
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
-            best_threshold = threshold
-
-    return best_threshold, best_accuracy
-
-# Predict and optimize weight
-best_weight = model.optimize_weight(X_train, y_train, user_train)
-optimized_predictions = model.predict_proba(X_test, user_test)
-optimal_threshold, optimal_accuracy = find_optimal_threshold(y_test, optimized_predictions)
-
-print("Accuracy with Optimal Threshold:", optimal_accuracy)
+if len(args.models_network) > 0:
+    from Neural_Network import train_model 
+    train_model(X_train = X_train, 
+                 y_train = y_train, 
+                 X_test = X_test, 
+                 y_test = y_test, 
+                 user_train = user_train,
+                 path = directory_name, 
+                 n_splits = args.GroupKFold, 
+                 debug = args.debug, 
+                 models = args.models_network)

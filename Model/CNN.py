@@ -56,8 +56,7 @@ class CNNModel:
             self._build_model(input_shape)
         
         lr_scheduler = self.compile_model()
-        history = self.model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[lr_scheduler])
-        return history
+        self.model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[lr_scheduler])
 
     def predict_proba(self, X_test):
         """

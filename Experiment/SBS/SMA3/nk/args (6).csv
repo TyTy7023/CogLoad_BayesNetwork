@@ -1,0 +1,2 @@
+data_folder_path,GroupKFold,window_size,normalize,model_selected_feature,k_features,forward,floating,estimator_RFECV,debug,models_single,models_mul,models_network,expert_lib
+/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/,3,3,MinMax,SBS,11,False,True,SVM,0,"['SVM', 'XGB', 'LR', 'RF']","['MLP_Sklearn', 'MLP_Keras', 'E7GB', 'ESVM', 'WGLR']","['CNN', 'RNN']",nk

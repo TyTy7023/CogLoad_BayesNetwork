@@ -135,8 +135,7 @@ class Preprocessing :
 
     #  Remove features from the data
     def remove_features(self, feature_list):
-        if feature_list != "None":
-            self.stat_feat_after = self.stat_feat_after.drop(columns = feature_list, errors = 'ignore')            
+        self.stat_feat_after = self.stat_feat_after.drop(columns = feature_list, errors = 'ignore')            
 
     # Split data into training and testing sets
     def splits_train_test(self):
@@ -205,9 +204,10 @@ class Preprocessing :
             if(self.window_size > 1):
                 self.SMA()
             self.extract_features()
-        
-        self.expert_features()
-        self.remove_features(features_to_remove)
+        if self.expert_lib != 'None':
+            self.expert_features()
+        if features_to_remove != 'None':
+            self.remove_features(features_to_remove)
         self.splits_train_test()
         self.X_train, self.X_test = self.normalize_data(self.X_train, self.X_test)
         return self.X_train, self.y_train, self.X_test, self.y_test, self.user_train, self.user_test

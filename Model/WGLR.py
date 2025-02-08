@@ -1,5 +1,5 @@
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, accuracy_score
 import numpy as np
 import pandas as pd
 
@@ -23,6 +23,7 @@ class WeightedRegression:
         self.weight = weight
         self.global_model = None
         self.individual_models = {}
+        self.best_params = None
 
     def fit(self, X, y, group_ids):
         """
@@ -46,7 +47,7 @@ class WeightedRegression:
             model.fit(X_group, y_group)
             self.individual_models[group] = model
 
-    def predict(self, X, group_ids):
+    def predict_proba(self, X, group_ids):
         """
         Predict using weighted combination of global and individualized models.
 
@@ -83,10 +84,24 @@ class WeightedRegression:
         """
         def weighted_mse(weight):
             self.weight = weight
-            y_pred = self.predict(X, group_ids)
+            y_pred = self.predict_proba(X, group_ids)
             return mean_squared_error(y, y_pred)
 
         from scipy.optimize import minimize
         result = minimize(weighted_mse, x0=0.5, bounds=[(0, 1)])
         self.weight = result.x[0]
-        return self.weight
+        self.best_params = self.weight
+    
+    def predict(self, y_true, y_prob):
+        thresholds = np.linspace(min(y_prob), max(y_prob), 100)  # Thử nghiệm 100 ngưỡng
+        best_accuracy = 0
+        best_predict = None
+
+        for threshold in thresholds:
+            predicted_classes = (y_prob >= threshold).astype(int)
+            accuracy = accuracy_score(y_true, predicted_classes)
+            if accuracy > best_accuracy:
+                best_accuracy = accuracy
+                best_predict = predicted_classes
+
+        return best_predict
