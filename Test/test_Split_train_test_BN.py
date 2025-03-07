@@ -33,7 +33,7 @@ log_args.to_csv(os.path.join(directory_name, file_name), index=False)
 
 #read the data
 label_df = pd.read_excel(args.data_labels_path + 'labels.xlsx',index_col=0)
-data = pd.read_csv(args.data_path + 'discrete_data.csv',index_col=0)
+data = pd.read_csv(args.data_path + 'discrete_data.csv')
 print("Data shapes:")
 print('Labels',label_df.shape)
 print('Data',data.shape)
