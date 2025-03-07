@@ -70,10 +70,14 @@ class Processing:
 
         # Concatenate and convert to DataFrame/NumPy array
         self.X_train = pd.concat(X_train)
-        self.y_train = pd.DataFrame(y_train, columns=["Labels"])
+        self.y_train = np.array(y_train)
         self.X_test = pd.concat(X_test)
-        self.y_test = pd.DataFrame(y_test, columns=["Labels"])
+        self.y_test = np.array(y_test) 
+
+        self.y_train = pd.DataFrame(self.y_train, columns=['Labels'])
+        self.y_test = pd.DataFrame(self.y_test, columns=['Labels'])
     def get_Data(self, bins = 2):
         self.Discretization_of_data(bins)
         self.splits_train_test()
+
         return self.X_train, self.y_train, self.X_test, self.y_test, self.user_train, self.user_test 
