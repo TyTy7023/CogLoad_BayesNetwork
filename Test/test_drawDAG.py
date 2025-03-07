@@ -45,10 +45,7 @@ X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data()
 
 # Draw DAG
 bn = BayesianNetwork(data, method=args.method)
-edges = bn.fit(data, method=args.method)
-print("Edges of DAG:", edges)
-
-# Train model
 bn.fit(X_train, y_train, user_train)
+print("Edges of DAG:", bn.edges)
 accuracy = bn.predict(X_test, y_test)
 print(f"Accuracy: {accuracy}")
