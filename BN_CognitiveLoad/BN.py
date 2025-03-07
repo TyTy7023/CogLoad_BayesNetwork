@@ -65,7 +65,7 @@ class BayesianNetwork:
         '''
         
         accuracies = []
-        model = BayesianNetwork(self.edges)
+        model = BayesianNetwork(list(self.edges))
         best_acc = 0
         self.best_model = None
 
