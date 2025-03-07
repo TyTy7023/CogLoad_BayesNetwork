@@ -40,7 +40,7 @@ print('Data',data.shape)
 
 #Processing data
 process = Processing(data, label_df)
-X_train, y_train, X_test, y_test = process.get_Data()
+X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data()
 print("Data shapes:")
 print('X_train',X_train.shape)
 print('y_train',y_train.shape)
