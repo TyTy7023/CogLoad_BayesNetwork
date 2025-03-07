@@ -18,7 +18,7 @@ from pgmpy.estimators import ExpectationMaximization
 from pgmpy.inference import VariableElimination
 from sklearn.model_selection import GroupKFold
 
-class BayesianNetwork:
+class BN:
     def __init__(self, data, method='hill_climbing'):
         self.data = data
         self.target = 'Labels'
