@@ -12,8 +12,6 @@ sys.path.append('/kaggle/working/cogload/BN_CognitiveLoad/')
 from ProcessingData import Processing
 from BN import BayesianNetwork
 
-
-
 #argument parser
 parser = ArgumentParser()
 parser.add_argument("--data_labels_path", default = "/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/", type = str, help = "Path to the data folder")
@@ -48,50 +46,9 @@ X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data()
 # Draw DAG
 bn = BayesianNetwork(data, method=args.method)
 edges = bn.fit(data, method=args.method)
-
 print("Edges of DAG:", edges)
 
-# train model
-import pandas as pd
-import numpy as np
-from pgmpy.models import BayesianNetwork
-from pgmpy.estimators import MaximumLikelihoodEstimator
-from pgmpy.estimators import ExpectationMaximization
-from pgmpy.inference import VariableElimination
-from sklearn.model_selection import GroupKFold
-from sklearn.metrics import accuracy_score
-
-accuracies = []
-model = BayesianNetwork(edges)
-target = 'Labels'
-
-kf = GroupKFold(n_splits=args.GroupKFold)  # Đảm bảo args.GroupKFold là số nguyên
-
-for train_idx, test_idx in kf.split(X_train, y_train, groups=user_train):
-    # Lấy dữ liệu theo index của fold hiện tại
-    train_val_data = pd.concat([X_train.iloc[train_idx], y_train.iloc[train_idx]], axis=1)
-    test_val_data = pd.concat([X_train.iloc[test_idx], y_train.iloc[test_idx]], axis=1)
-
-    print("Train shape:", train_val_data.shape, train_val_data.info(), train_val_data.head())
-    # Huấn luyện mô hình
-    model.fit(train_val_data, estimator=ExpectationMaximization)
-
-    # Dự đoán trên tập test
-    infer = VariableElimination(model)
-    y_pred = []
-
-    for _, row in test_val_data.iterrows():
-        evidence = row.drop(columns=[target]).to_dict()  # Xóa cột target để làm bằng chứng
-        q = infer.map_query(variables=[target], evidence=evidence)
-        y_pred.append(q[target])
-
-    # Tính Accuracy
-    acc = accuracy_score(test_val_data[target], y_pred)
-    accuracies.append(acc)
-
-print("Accuracies in val :", accuracies)
-print("Mean accuracy in val:", np.mean(accuracies))
-
-
-
-
+# Train model
+bn.fit(X_train, y_train, user_train)
+accuracy = bn.predict(X_test, y_test)
+print(f"Accuracy: {accuracy}")
