@@ -41,7 +41,7 @@ class Processing:
 
         for user in self.label_df.user_id.unique():
             if user in train_ids:
-                user_features = self.discrete_data[self.data.user_id == user]
+                user_features = self.discrete_data[self.label_df.user_id == user]
                 X_train.append(user_features)
                 y = self.label_df.loc[self.label_df.user_id == user, 'level'].values
 
