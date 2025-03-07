@@ -79,7 +79,7 @@ for train_idx, test_idx in kf.split(X_train, y_train, groups=user_train):
     infer = VariableElimination(model)
     y_pred = []
 
-    for _, row in tes_valt_data.iterrows():
+    for _, row in test_val_data.iterrows():
         evidence = row.drop(columns=[target]).to_dict()  # Xóa cột target để làm bằng chứng
         q = infer.map_query(variables=[target], evidence=evidence)
         y_pred.append(q[target])
