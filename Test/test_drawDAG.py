@@ -69,8 +69,8 @@ kf = GroupKFold(n_splits=args.GroupKFold)  # Đảm bảo args.GroupKFold là s�
 
 for train_idx, test_idx in kf.split(X_train, y_train, groups=user_train):
     # Lấy dữ liệu theo index của fold hiện tại
-    train_val_data = pd.concat([X_train.iloc[train_idx], y_train[train_idx]], axis=1)
-    test_val_data = pd.concat([X_train.iloc[test_idx], y_train[test_idx]], axis=1)
+    train_val_data = pd.concat([X_train.iloc[train_idx], y_train.iloc[train_idx]], axis=1)
+    test_val_data = pd.concat([X_train.iloc[test_idx], y_train.iloc[test_idx]], axis=1)
 
     # Huấn luyện mô hình
     model.fit(train_val_data, estimator=ExpectationMaximization)
