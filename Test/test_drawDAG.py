@@ -72,6 +72,7 @@ for train_idx, test_idx in kf.split(X_train, y_train, groups=user_train):
     train_val_data = pd.concat([X_train.iloc[train_idx], y_train.iloc[train_idx]], axis=1)
     test_val_data = pd.concat([X_train.iloc[test_idx], y_train.iloc[test_idx]], axis=1)
 
+    print("Train shape:", train_val_data.shape, train_val_data.info(), train_val_data.head())
     # Huấn luyện mô hình
     model.fit(train_val_data, estimator=ExpectationMaximization)
 
