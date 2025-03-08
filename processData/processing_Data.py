@@ -68,6 +68,7 @@ class Preprocessing :
         self.gsr_df = gsr_df
         self.rr_df = rr_df
         self.label_df = label_df
+        self.labels_cogload = None
         self.stat_feat_all = None
         self.expert_lib = expert_lib
         self.stat_feat_after = pd.concat([temp_df, hr_df, gsr_df, rr_df],axis=1)
