@@ -64,6 +64,7 @@ class BN:
         '''
         
         accuracies = []
+        self.cols_drop = []
         best_acc = 0
         self.best_model = None
 
@@ -83,6 +84,18 @@ class BN:
             print("Edges of DAG:", edges)
             edges =  list(edges) 
             model = BayesianNetwork(edges)
+
+            unique_nodes = set(node for edge in edges for node in edge)
+            num_unique_nodes = len(unique_nodes)
+            
+            cols = []
+            columns = train_val_data.columns
+            for col in columns:
+                if col not in list(unique_nodes):
+                    cols = col
+            train_val_data = train_val_data.drop(columns = cols)
+            test_val_data = test_val_data.drop(columns = cols)
+            
             model.fit(train_val_data, estimator=ExpectationMaximization)
 
             # Dự đoán trên tập test
@@ -101,6 +114,7 @@ class BN:
                 best_acc = acc
                 self.best_model = model
                 self.edges = edges
+                self.cols_drop = cols
             accuracies.append(acc)
         
         path_EDA = '/kaggle/working/'
@@ -113,7 +127,8 @@ class BN:
         infer = VariableElimination(self.best_model)
         y_pred = []
         test_set = pd.concat([X_test.reset_index(drop=True),y_test.reset_index(drop=True)], axis=1)
-
+        test_set = test_set.drop(columns = cols)
+        
         for _, row in test_set.iterrows():
             evidence = row.drop(self.target, errors='ignore').to_dict()
             q = infer.map_query(variables=[self.target], evidence=evidence)
