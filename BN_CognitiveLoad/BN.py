@@ -129,7 +129,7 @@ class BN:
         infer = VariableElimination(self.best_model)
         y_pred = []
         test_set = pd.concat([X_test.reset_index(drop=True),y_test.reset_index(drop=True)], axis=1)
-        test_set = test_set.drop(columns = cols)
+        test_set = test_set.drop(columns = self.cols_drop)
         
         for _, row in test_set.iterrows():
             evidence = row.drop(self.target, errors='ignore').to_dict()
