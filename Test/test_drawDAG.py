@@ -48,3 +48,21 @@ bn = BN(data, method=args.method)
 bn.fit(X_train, y_train, user_train, args.GroupKFold)
 accuracy = bn.predict(X_test, y_test)
 print(f"Accuracy: {accuracy}")
+
+import networkx as nx
+import matplotlib.pyplot as plt
+
+edges = bn.edges
+G = nx.DiGraph()
+G.add_edges_from(edges)
+
+plt.figure(figsize=(12, 8))
+pos = nx.nx_pydot.pydot_layout(G, prog="dot")  # Thay vì pygraphviz
+
+nx.draw(G, pos, with_labels=True, node_size=1000, node_color="lightblue",
+        font_size=10, font_weight="bold", edge_color="gray", arrows=True, 
+        arrowsize=20, connectionstyle="arc3,rad=0.1")
+
+plt.title("Directed Graph Representation")
+plt.savefig("/kaggle/working/graph.png", dpi=300, bbox_inches="tight")  # Lưu với độ phân giải cao
+plt.show()
