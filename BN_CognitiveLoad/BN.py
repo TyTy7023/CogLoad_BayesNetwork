@@ -93,6 +93,7 @@ class BN:
             for col in columns:
                 if col not in list(unique_nodes):
                     cols = col
+                    print(col)
             train_val_data = train_val_data.drop(columns = cols)
             test_val_data = test_val_data.drop(columns = cols)
             print('Shape train test val: ',train_val_data.shape,test_val_data.shape)
