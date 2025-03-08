@@ -59,7 +59,7 @@ class BN:
 
         return best_model.edges()
     
-    def fit(self, X_train, y_train, user_train):
+    def fit(self, X_train, y_train, user_train,splits):
         '''
         Fit Bayesian Network
         '''
@@ -71,7 +71,7 @@ class BN:
         best_acc = 0
         self.best_model = None
 
-        kf = GroupKFold(n_splits=6)  # Đảm bảo args.GroupKFold là số nguyên
+        kf = GroupKFold(n_splits=splits)  # Đảm bảo args.GroupKFold là số nguyên
 
         for fold, (train_index, val_index) in enumerate(kf.split(X_train, y_train, groups = user_train)):
             X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
