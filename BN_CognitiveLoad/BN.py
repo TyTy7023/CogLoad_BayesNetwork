@@ -86,7 +86,7 @@ class BN:
             model = BayesianNetwork(edges)
 
             unique_nodes = set(node for edge in edges for node in edge)
-            num_unique_nodes = len(unique_nodes)
+            print(len(unique_nodes))
             
             cols = []
             columns = train_val_data.columns
