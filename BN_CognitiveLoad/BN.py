@@ -25,7 +25,6 @@ class BN:
         self.method = method
         if method not in ['hill_climbing', 'tabu_search']:
             raise ValueError('Method not found')
-        self.edges = self.Hill_climbing(data) if method == 'hill_climbing' else self.tabu_search(data)
 
     def Hill_climbing(self, data):
         hc = HillClimbSearch(data)
@@ -65,9 +64,6 @@ class BN:
         '''
         
         accuracies = []
-        print("Edges of DAG:", self.edges)
-        edges =  list(self.edges) 
-        model = BayesianNetwork(edges)
         best_acc = 0
         self.best_model = None
 
@@ -83,6 +79,10 @@ class BN:
                                     y_val_fold.reset_index(drop=True)], axis=1)
 
             # Huấn luyện mô hình
+            self.edges = self.Hill_climbing(train_val_data) if method == 'hill_climbing' else self.tabu_search(train_val_data)
+            print("Edges of DAG:", self.edges)
+            edges =  list(self.edges) 
+            model = BayesianNetwork(edges)
             model.fit(train_val_data, estimator=ExpectationMaximization)
 
             # Dự đoán trên tập test
