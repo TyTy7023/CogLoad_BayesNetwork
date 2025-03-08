@@ -106,18 +106,18 @@ class BN:
         EDA.draw_Bar(path_EDA, [f"fold {i+1}" for i in range(len(accuracies))] , accuracies, 'Accuracy Val')
 
     def get_PDT(self):
-    '''
-    Lấy bảng phân phối xác suất có điều kiện (CPD) của Bayesian Network
-    '''
-    if self.best_model is None:
-        raise ValueError("Mô hình chưa được huấn luyện. Vui lòng chạy fit() trước.")
-    
-    pdt = {}
-    for node in self.best_model.nodes():
-        cpd = self.best_model.get_cpds(node)
-        pdt[node] = cpd if cpd else "No CPD found"
-    
-    return pdt
+        '''
+        Lấy bảng phân phối xác suất có điều kiện (CPD) của Bayesian Network
+        '''
+        if self.best_model is None:
+            raise ValueError("Mô hình chưa được huấn luyện. Vui lòng chạy fit() trước.")
+        
+        pdt = {}
+        for node in self.best_model.nodes():
+            cpd = self.best_model.get_cpds(node)
+            pdt[node] = cpd if cpd else "No CPD found"
+        
+        return pdt
 
 
     def predict(self, X_test, y_test):
