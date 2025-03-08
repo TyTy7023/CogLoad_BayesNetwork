@@ -79,7 +79,7 @@ class BN:
                                     y_val_fold.reset_index(drop=True)], axis=1)
 
             # Huấn luyện mô hình
-            edges = self.Hill_climbing(train_val_data) if method == 'hill_climbing' else self.tabu_search(train_val_data)
+            edges = self.Hill_climbing(train_val_data) if self.method == 'hill_climbing' else self.tabu_search(train_val_data)
             print("Edges of DAG:", edges)
             edges =  list(edges) 
             model = BayesianNetwork(edges)
