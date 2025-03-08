@@ -86,7 +86,7 @@ class BN:
             model = BayesianNetwork(edges)
 
             unique_nodes = set(node for edge in edges for node in edge)
-            print(len(unique_nodes))
+            print('len unique nodes: ',len(unique_nodes))
             
             cols = []
             columns = train_val_data.columns
@@ -95,6 +95,7 @@ class BN:
                     cols = col
             train_val_data = train_val_data.drop(columns = cols)
             test_val_data = test_val_data.drop(columns = cols)
+            print('Shape train test val: ',train_val_data.shape,test_val_data.shape)
             
             model.fit(train_val_data, estimator=ExpectationMaximization)
 
