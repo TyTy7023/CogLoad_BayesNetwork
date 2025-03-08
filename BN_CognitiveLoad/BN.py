@@ -92,7 +92,7 @@ class BN:
             columns = train_val_data.columns
             for col in columns:
                 if col not in list(unique_nodes):
-                    cols = col
+                    cols.append(col)
                     print(col)
             train_val_data = train_val_data.drop(columns = cols)
             test_val_data = test_val_data.drop(columns = cols)
