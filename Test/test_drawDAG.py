@@ -45,6 +45,6 @@ X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data()
 
 # Draw DAG
 bn = BN(data, method=args.method)
-bn.fit(X_train, y_train, user_train)
+bn.fit(X_train, y_train, user_train, args.GroupKFold)
 accuracy = bn.predict(X_test, y_test)
 print(f"Accuracy: {accuracy}")
