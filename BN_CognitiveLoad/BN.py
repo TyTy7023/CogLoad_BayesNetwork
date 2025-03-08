@@ -79,9 +79,9 @@ class BN:
                                     y_val_fold.reset_index(drop=True)], axis=1)
 
             # Huấn luyện mô hình
-            self.edges = self.Hill_climbing(train_val_data) if method == 'hill_climbing' else self.tabu_search(train_val_data)
-            print("Edges of DAG:", self.edges)
-            edges =  list(self.edges) 
+            edges = self.Hill_climbing(train_val_data) if method == 'hill_climbing' else self.tabu_search(train_val_data)
+            print("Edges of DAG:", edges)
+            edges =  list(edges) 
             model = BayesianNetwork(edges)
             model.fit(train_val_data, estimator=ExpectationMaximization)
 
@@ -100,6 +100,7 @@ class BN:
             if acc > best_acc:
                 best_acc = acc
                 self.best_model = model
+                self.edges = edges
             accuracies.append(acc)
         
         path_EDA = '/kaggle/working/'
