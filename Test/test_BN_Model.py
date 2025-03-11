@@ -23,7 +23,6 @@ parser.add_argument("--GroupKFold", default = 3, type = int, help = "Slip data i
 parser.add_argument("--method", default = 'None', type = str, help = "Method to draw DAG (hill_climbing or tabu_search)")
 parser.add_argument("--edges", nargs='+', default=[] , type=tuple, help="models to train")
 
-
 args = parser.parse_args()
 
 args_dict = vars(args)
@@ -41,6 +40,7 @@ data = pd.read_csv(args.data_path + 'discrete_data.csv')
 print("Data shapes:")
 print('Labels',label_df.shape)
 print('Data',data.shape)
+print(args.edges, type(args.edges))
 
 #Processing data
 selected_features = ['temp_mean','temp_std','temp_max-min','temp_skew','temp_kurtosis',
