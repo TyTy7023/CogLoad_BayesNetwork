@@ -59,6 +59,8 @@ data['temp_features'] = data[['temp_mean', 'temp_std', 'temp_max-min', 'temp_ske
 data['hr_features'] = data[['hr_mean', 'hr_std', 'hr_max-min', 'hr_skew', 'hr_kurtosis']].mean(axis=1)
 data['rr_features'] = data[['rr_mean', 'rr_std', 'rr_max-min', 'rr_skew', 'rr_kurtosis','HRV_Cd','HRV_AI','HRV_MedianNN','HRV_GI','HRV_CSI_Modified','HRV_CVNN','HRV_RMSSD','rr_diff2','HRV_IALS','HRV_PAS','HRV_HFn']].mean(axis=1) 
 data['gsr_features'] = data[['gsr_mean', 'gsr_std', 'gsr_max-min', 'gsr_skew', 'gsr_kurtosis']].mean(axis=1)
+
+selected_features.extend(['temp_features', 'hr_features', 'rr_features', 'gsr_features'])
 data = data[selected_features]
 cols = [col for col in data.columns if col != 'Labels'] + ['Labels']
 data = data[cols]
