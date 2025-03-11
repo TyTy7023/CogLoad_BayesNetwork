@@ -65,11 +65,11 @@ cols = [col for col in data.columns if col != 'Labels'] + ['Labels']
 data = data[cols]
 
 #Processing data
-process = Processing(data, label_df)
+process = Processing(data, label_df, directory_name)
 X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data(bins = 2)
 
 # Draw DAG
-bn = BN(data, method=args.method)
+bn = BN(data, method=args.method, path = directory_name)
 bn.edges = [
     ('temp_mean', 'temp_features'), ('temp_std', 'temp_features'), ('temp_max-min', 'temp_features'), 
     ('temp_skew', 'temp_features'), ('temp_kurtosis', 'temp_features'),
