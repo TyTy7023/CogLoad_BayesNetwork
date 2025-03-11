@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import roc_curve, auc
-
+import networkx as nx
 
 class EDA:
     @staticmethod
@@ -131,3 +131,18 @@ class EDA:
         plt.tight_layout()
         EDA._save_plot(path, 'DATA_3D')
 
+    @staticmethod
+    def draw_DAG(path, edges):
+        G = nx.DiGraph()
+        G.add_edges_from(edges)
+
+        plt.figure(figsize=(12, 8))
+        pos = nx.nx_pydot.pydot_layout(G, prog="dot")  # Thay vì pygraphviz
+
+        nx.draw(G, pos, with_labels=True, node_size=1000, node_color="lightblue",
+                font_size=10, font_weight="bold", edge_color="gray", arrows=True, 
+                arrowsize=20, connectionstyle="arc3,rad=0.1")
+
+        plt.title("Directed Graph Representation")
+        plt.savefig(f"{path}graph.png", dpi=300, bbox_inches="tight")  # Lưu với độ phân giải cao
+        plt.show()

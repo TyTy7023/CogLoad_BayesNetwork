@@ -9,7 +9,8 @@ install_and_import('pgmpy')
 from sklearn.preprocessing import KBinsDiscretizer
 
 class Processing:
-    def __init__(self, data, labels):
+    def __init__(self, data, labels, path = '/kaggle/working/'):
+        self.path = path
         self.data = data.iloc[:, :-1]
         self.target = data['Labels']
         self.label_df = labels
@@ -23,8 +24,9 @@ class Processing:
         self.discrete_data = pd.DataFrame(discretizer.fit_transform(self.data[num_cols]), columns=num_cols).astype(int)
 
         data = pd.concat([self.discrete_data, self.target], axis = 1)
-        data.to_csv('/kaggle/working/discrete_data.csv', index=False)
+        data.to_csv(f'{self.path}discrete_data.csv', index=False)
 
+        return data
 
     def splits_train_test(self):
         test_ids = ['3caqi','6frz4','bd47a','f1gjp','iz3x1']
