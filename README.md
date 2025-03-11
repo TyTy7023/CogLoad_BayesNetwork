@@ -1,4 +1,4 @@
-### **Cog_BayesNetwork**  
+# **Cog_BayesNetwork**  
 
 ## **About My Data**  
 - Includes three directories (**23_objects**, **allFeatures**, **last_30s_segments**):  
