@@ -157,6 +157,7 @@ class BN:
             y_pred.append(q.values.argmax())  # Nhãn dự đoán
             y_probs.append(q.values[1])  # Xác suất của class 1
 
+        print(accuracy_score(test_set[self.target], y_pred))
         EDA.draw_ROC(self.path,test_set[self.target], [y_probs],['BN_model'])
         EDA.draw_Bar(self.path, 'BN_model', [accuracy_score(test_set[self.target], y_pred)], 'Accuracy Test')
                      
