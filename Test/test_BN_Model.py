@@ -1,7 +1,6 @@
-#to access files and folders
 import os
-#data analysis and manipulation library
 import pandas as pd
+import ast
 from argparse import ArgumentParser
 
 import warnings
@@ -21,7 +20,7 @@ parser.add_argument("--data_labels_path", default = "/kaggle/input/cognitiveload
 parser.add_argument("--data_path", default = "/kaggle/input/cognitiveload/Feature_selection/", type = str, help = "Path to the data folder")
 parser.add_argument("--GroupKFold", default = 3, type = int, help = "Slip data into k group")
 parser.add_argument("--method", default = 'None', type = str, help = "Method to draw DAG (hill_climbing or tabu_search)")
-parser.add_argument("--edges", nargs='+', default=[] , type=tuple, help="models to train")
+parser.add_argument("--edges",  type = str, help="models to train")
 
 args = parser.parse_args()
 
@@ -36,11 +35,10 @@ log_args.to_csv(os.path.join(directory_name, file_name), index=False)
 
 #read the data
 label_df = pd.read_excel(args.data_labels_path + 'labels.xlsx',index_col=0)
-data = pd.read_csv(args.data_path + 'discrete_data.csv')
+data = pd.read_csv(args.data_path + 'all_data.csv')
 print("Data shapes:")
 print('Labels',label_df.shape)
 print('Data',data.shape)
-print(args.edges, type(args.edges))
 
 #Processing data
 selected_features = ['temp_mean','temp_std','temp_max-min','temp_skew','temp_kurtosis',
@@ -75,7 +73,8 @@ process = Processing(data, label_df)
 X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data(bins = 2)
 
 # Draw DAG
-bn = BN(data, method=args.method, edges = args.edges)
+edges_list = ast.literal_eval(f"[{args.edges}]")
+bn = BN(data, method=args.method, edges = edges_list)
 bn.fit(X_train, y_train, user_train, args.GroupKFold)
 accuracy = bn.predict(X_test, y_test)
 
