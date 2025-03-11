@@ -10,7 +10,7 @@
 - Sau khi qua xử lý chúng tôi đã điều chỉnh dữ liệu để phù hợp với mô hình Mạng Bayesian, tất cả đều được đẩy lên [DATASET](https://www.kaggle.com/datasets/quanminhminhquan/cognitiveload)
 ## Purpose:
 - Xây dựng mô hình Mạng Bayesian dựa trên các đặc trưng được chọn nhằm nâng cao hiệu suất phân loại tín hiệu nhận thức. Nghiên cứu tập trung vào việc khai thác mối quan hệ giữa các tín hiệu sinh lý (RR, GSR, HR, Temp) và trạng thái tải nhận thức (Rest/Load) thông qua mô hình Bayesian
-  <img src="(https://learningpartnership.s3.amazonaws.com/uploads/asset_image/2_299.jpg" alt="CognitiveLoad" width="250" />
+  <img src="https://learningpartnership.s3.amazonaws.com/uploads/asset_image/2_299.jpg" alt="CognitiveLoad" width="250" />
   ![CognitiveLoad](https://learningpartnership.s3.amazonaws.com/uploads/asset_image/2_299.jpg)
 - Hướng thực hiện nghiên cứu 
   	+ Phân tích và đánh giá các phương pháp hiện có: Tiến hành phân tích và đánh giá các mô hình truyền thống như SVM, Random Forest, Gradient Boosting, CNN, RNN, v.v., nhằm xác định các phương pháp tối ưu trong phân loại tín hiệu nhận thức.
