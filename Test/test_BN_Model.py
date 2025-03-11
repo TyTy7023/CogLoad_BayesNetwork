@@ -20,7 +20,6 @@ parser.add_argument("--data_labels_path", default = "/kaggle/input/cognitiveload
 parser.add_argument("--data_path", default = "/kaggle/input/cognitiveload/Feature_selection/", type = str, help = "Path to the data folder")
 parser.add_argument("--GroupKFold", default = 3, type = int, help = "Slip data into k group")
 parser.add_argument("--method", default = 'hill_climbing', type = str, help = "Method to draw DAG (hill_climbing or tabu_search)")
-parser.add_argument("--edges",  type = str, help="models to train")
 
 args = parser.parse_args()
 
@@ -70,25 +69,30 @@ process = Processing(data, label_df)
 X_train, y_train, X_test, y_test, user_train, user_test = process.get_Data(bins = 2)
 
 # Draw DAG
-bn = BN(data, method=args.method, path=directory_name, edges = ast.literal_eval(f'[{args.edges}]'))
-# bn.edges = [
-#     ('temp_mean', 'temp_features'), ('temp_std', 'temp_features'), ('temp_max-min', 'temp_features'), ('temp_skew', 'temp_features'), ('temp_kurtosis', 'temp_features'),
+bn = BN(data, method=args.method)
+bn.edges = [
+    ('temp_mean', 'temp_features'), ('temp_std', 'temp_features'), ('temp_max-min', 'temp_features'), 
+    ('temp_skew', 'temp_features'), ('temp_kurtosis', 'temp_features'),
     
-#     ('gsr_mean', 'gsr_features'), ('gsr_std', 'gsr_features'), ('gsr_max-min', 'gsr_features'), ('gsr_skew', 'gsr_features'), ('gsr_kurtosis', 'gsr_features'),
+    ('gsr_mean', 'gsr_features'), ('gsr_std', 'gsr_features'), ('gsr_max-min', 'gsr_features'), 
+    ('gsr_skew', 'gsr_features'), ('gsr_kurtosis', 'gsr_features'),
     
-#     ('rr_mean', 'rr_features'), ('rr_std', 'rr_features'), ('rr_max-min', 'rr_features'), ('rr_skew', 'rr_features'), ('rr_kurtosis', 'rr_features'), ('rr_diff2','rr_features'),
+    ('rr_mean', 'rr_features'), ('rr_std', 'rr_features'), ('rr_max-min', 'rr_features'), 
+    ('rr_skew', 'rr_features'), ('rr_kurtosis', 'rr_features'), ('rr_diff2','rr_features'),
     
-#     ('HRV_Cd','rr_features'), ('HRV_AI','rr_features'), ('HRV_MedianNN','rr_features'), ('HRV_GI','rr_features'), ('HRV_CSI_Modified','rr_features'), ('HRV_CVNN','rr_features'), ('HRV_RMSSD','rr_features'), ('HRV_IALS','rr_features'), ('HRV_PAS','rr_features'), ('HRV_HFn','rr_features'),
+    ('HRV_Cd','rr_features'), ('HRV_AI','rr_features'), ('HRV_MedianNN','rr_features'), 
+    ('HRV_GI','rr_features'), ('HRV_CSI_Modified','rr_features'), ('HRV_CVNN','rr_features'), 
+    ('HRV_RMSSD','rr_features'), ('HRV_IALS','rr_features'), ('HRV_PAS','rr_features'), ('HRV_HFn','rr_features'),
     
-#     ('hr_mean', 'hr_features'), ('hr_std', 'hr_features'), ('hr_max-min', 'hr_features'), ('hr_skew', 'hr_features'), ('hr_kurtosis', 'hr_features'), 
+    ('hr_mean', 'hr_features'), ('hr_std', 'hr_features'), ('hr_max-min', 'hr_features'), 
+    ('hr_skew', 'hr_features'), ('hr_kurtosis', 'hr_features'), 
     
-    
-#     ('hr_features', 'rr_features'),  # HR có thể ảnh hưởng đến RR  
-#     ('rr_features', 'gsr_features'),  # RR có thể ảnh hưởng đến GSR  
-#     ('gsr_features', 'temp_features'),  # GSR có thể ảnh hưởng đến Temp  
-#     ('rr_features', 'Labels'),('temp_features', 'Labels'),('gsr_features', 'Labels')
-# ]
+    ('hr_features', 'rr_features'),  
+    ('rr_features', 'gsr_features'),  
+    ('gsr_features', 'temp_features'), 
 
+    ('rr_features', 'Labels'),('temp_features', 'Labels'),('gsr_features', 'Labels')
+]
 bn.fit(X_train, y_train, user_train, args.GroupKFold)
 accuracy = bn.predict(X_test, y_test)
 

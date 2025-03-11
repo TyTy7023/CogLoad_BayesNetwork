@@ -23,15 +23,12 @@ import seaborn as sns
 from sklearn.metrics import roc_curve, auc
 
 class BN:
-    def __init__(self, data, method='hill_climbing', path='kaggle/working/', edges=None):
+    def __init__(self, data, method='hill_climbing', path='kaggle/working/'):
         self.path = path
         self.data = data
         self.target = 'Labels'
         self.method = method
-        if method not in ['hill_climbing', 'tabu_search']:
-            self.edges = edges
-        else:
-            self.edges = self.Hill_climbing(data) if method == 'hill_climbing' else self.tabu_search(data)
+        self.edges = self.Hill_climbing(data) if method == 'hill_climbing' else self.tabu_search(data)
 
     def Hill_climbing(self, data):
         hc = HillClimbSearch(data)
