@@ -94,6 +94,6 @@ bn.edges = [
     ('rr_features', 'Labels'),('temp_features', 'Labels'),('gsr_features', 'Labels')
 ]
 bn.fit(X_train, y_train, user_train, args.GroupKFold)
-bn.predict(X_test, y_test)
 # Save CPD result
 bn.get_PDT()
+bn.predict(X_test, y_test)
