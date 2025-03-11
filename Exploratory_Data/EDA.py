@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import roc_curve, auc
-
+import networkx as nx
 
 class EDA:
     @staticmethod
@@ -130,4 +130,3 @@ class EDA:
         # Hiển thị hình ảnh
         plt.tight_layout()
         EDA._save_plot(path, 'DATA_3D')
-
