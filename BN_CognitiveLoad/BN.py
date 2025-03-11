@@ -121,7 +121,7 @@ class BN:
             y_prob_list.append(y_probs)
 
         EDA.draw_Bar(self.path, [f"fold {i+1}" for i in range(len(accuracies))] , accuracies, 'Accuracy Val')
-        EDA.draw_ROC(self.path, y_true_list, y_prob_list,  [f"fold {i+1}" for i in range(len(accuracies))])
+        EDA.draw_ROC(self.path, y_true_list, y_prob_list, 'BN_Model')
 
     def get_PDT(self):
         '''
