@@ -10,11 +10,11 @@
 - After preprocessing, the data was adjusted to fit the **Bayesian Network model**, and all datasets were uploaded to **[DATASET](https://www.kaggle.com/datasets/quanminhminhquan/cognitiveload)**.  
 
 ## **Purpose**  
-- Develop a **Bayesian Network model** based on selected features to improve the classification performance of cognitive load signals. The study focuses on exploring the relationships between physiological signals (**RR, GSR, HR, Temp**) and cognitive load states (**Rest/Load**) using a Bayesian model.  
+- Develop a **Bayesian Network model** based on selected features to improve the classification performance of cognitive load signals. The study focuses on exploring the relationships between physiological signals (**RR, GSR, HR, Temp**) and cognitive load states (**Rest/Load**) using a  **Bayesian Network model**.  
 
 <div style="text-align: center;">
-  <img src="https://learningpartnership.s3.amazonaws.com/uploads/asset_image/2_299.jpg" alt="CognitiveLoad" width="400" style="text-align: left;"/>
-  <img src="img/signal.png" alt="Signal" width="335" style="text-align: right;"/>
+  <img src="https://learningpartnership.s3.amazonaws.com/uploads/asset_image/2_299.jpg" alt="CognitiveLoad" width="400"/>
+  <img src="img/signal.png" alt="Signal" width="335"/>
 </div>  
 
 ## **Research Approach**  
