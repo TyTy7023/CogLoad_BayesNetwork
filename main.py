@@ -95,6 +95,6 @@ bn.edges = [
 ]
 bn.fit(X_train, y_train, user_train, args.GroupKFold)
 accuracy = bn.predict(X_test, y_test)
-
+print(accuracy)
 # Save CPD result
 bn.get_PDT()
