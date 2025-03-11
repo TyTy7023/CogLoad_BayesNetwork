@@ -19,7 +19,7 @@ parser = ArgumentParser()
 parser.add_argument("--data_labels_path", default = "/kaggle/input/cognitiveload/UBIcomp2020/last_30s_segments/", type = str, help = "Path to the data folder")
 parser.add_argument("--data_path", default = "/kaggle/input/cognitiveload/Feature_selection/", type = str, help = "Path to the data folder")
 parser.add_argument("--GroupKFold", default = 3, type = int, help = "Slip data into k group")
-parser.add_argument("--method", default = 'None', type = str, help = "Method to draw DAG (hill_climbing or tabu_search)")
+parser.add_argument("--method", default = 'hill_climbing', type = str, help = "Method to draw DAG (hill_climbing or tabu_search)")
 parser.add_argument("--edges",  type = str, help="models to train")
 
 args = parser.parse_args()
@@ -59,6 +59,9 @@ data['temp_features'] = data[['temp_mean', 'temp_std', 'temp_max-min', 'temp_ske
 data['hr_features'] = data[['hr_mean', 'hr_std', 'hr_max-min', 'hr_skew', 'hr_kurtosis']].mean(axis=1)
 data['rr_features'] = data[['rr_mean', 'rr_std', 'rr_max-min', 'rr_skew', 'rr_kurtosis','HRV_Cd','HRV_AI','HRV_MedianNN','HRV_GI','HRV_CSI_Modified','HRV_CVNN','HRV_RMSSD','rr_diff2','HRV_IALS','HRV_PAS','HRV_HFn']].mean(axis=1) 
 data['gsr_features'] = data[['gsr_mean', 'gsr_std', 'gsr_max-min', 'gsr_skew', 'gsr_kurtosis']].mean(axis=1)
+data = data[selected_features]
+cols = [col for col in data.columns if col != 'Labels'] + ['Labels']
+data = data[cols]
 
 #Processing data
 process = Processing(data, label_df)
