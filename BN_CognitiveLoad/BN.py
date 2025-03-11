@@ -99,6 +99,7 @@ class BN:
             test_val_data = test_val_data.drop(columns = self.cols_drop)
             print('Shape train test val: ',train_val_data.shape,test_val_data.shape)
             
+            print('fold train ', train_val_data)
             # Huấn luyện mô hình
             model.fit(train_val_data, estimator=ExpectationMaximization)
     
