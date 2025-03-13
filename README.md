@@ -47,5 +47,7 @@
 - The **CPDs quantify the probabilistic influence** of each feature on the classification outcome, allowing for interpretable decision-making and uncertainty estimation in real-world applications.  
 - The learned Bayesian Network reveals that **RR plays a central role** in the physiological relationship network, while **GSR and Temp serve as supporting features** in cognitive load classification.  
 - Comparative evaluation shows that the **Bayesian Network model achieves competitive classification performance**, while also offering the advantage of **interpretable causal relationships** over black-box machine learning models.  
-
+<div style="text-align: center;">
+  <img src="img/DAG.png" alt="DAG BN" width="500" height="300"/>
+</div>  
 🚀 **Future work** will focus on improving feature selection strategies, incorporating dynamic Bayesian models, and validating the approach on larger datasets for real-world deployment.
