@@ -53,7 +53,7 @@
       <img src="img/DAG.png" alt="DAG BN" width="500" height="300"/>
     </td>
     <td>
-      <table border="1"  width="200">
+      <table border="1"  width="150">
         <tr> 
           <th>gsr_features</th>
           <th>rr_features</th>
