@@ -1,10 +1,23 @@
 # **Cog_BayesNetwork**  
 ## Authors
-| **Research Advisor**    | **Conducted by**      |
-|-------------------------|----------------------|
-| Dr. Nguyễn Quốc Huy     | Đỗ Minh Quân        |
-| Dr. Đỗ Như Tài          | Lê Thị Mỹ Hương     |
-|                         | Trần Bùi Ty Ty      |
+<table>
+  <tr>
+    <th>Research Advisor</th>
+    <th>Conducted by</th>
+  </tr>
+  <tr>
+    <td>Dr. Nguyễn Quốc Huy</td>
+    <td>Đỗ Minh Quân</td>
+  </tr>
+  <tr>
+    <td>Dr. Đỗ Như Tài</td>
+    <td>Lê Thị Mỹ Hương</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>Trần Bùi Ty Ty</td>
+  </tr>
+</table>
 
 ## **About My Data**  
 - Includes three directories (**23_objects**, **allFeatures**, **last_30s_segments**):  
