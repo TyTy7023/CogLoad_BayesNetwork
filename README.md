@@ -62,60 +62,28 @@
           <th>load</th>
         </tr>
         <tr>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0.3194</td>
-          <td>0.6806</td>
+          <td>0</td> <td>0</td> <td>0</td> <td>0.3194</td> <td>0.6806</td> 
         </tr>
         <tr>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0.4310</td>
-          <td>0.5690</td>
+          <td>0</td> <td>0</td> <td>1</td> <td>0.4310</td> <td>0.5690</td> 
         </tr>
         <tr>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0.6269</td>
-          <td>0.3731</td>
+          <td>0</td> <td>1</td> <td>0</td> <td>0.6269</td> <td>0.3731</td> 
         </tr>
         <tr>
-          <td>0</td>
-          <td>1</td>
-          <td>1</td>
-          <td>0.4230</td>
-          <td>0.5769</td>
+          <td>0</td> <td>1</td> <td>1</td> <td>0.4230</td> <td>0.5769</td> 
         </tr>
         <tr>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0.4643</td>
-          <td>0.5357</td>
+          <td>1</td> <td>0</td> <td>0</td> <td>0.4643</td> <td>0.5357</td> 
         </tr>
         <tr>
-          <td>1</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0.4461</td>
-          <td>0.5538</td>
+          <td>1</td> <td>0</td> <td>1</td> <td>0.4461</td> <td>0.5538</td> 
         </tr>
         <tr>
-          <td>1</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0.6327</td>
-          <td>0.3673</td>
+          <td>1</td> <td>1</td> <td>0</td> <td>0.6327</td> <td>0.3673</td> 
         </tr>
         <tr>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>0.6122</td>
-          <td>0.3878</td>
+          <td>1</td> <td>1</td> <td>1</td> <td>0.6122</td> <td>0.3878</td> 
         </tr>
       </table>
     </td>
