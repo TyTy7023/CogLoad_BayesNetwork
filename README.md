@@ -55,9 +55,9 @@
     <td>
       <table border="1"  width="200">
         <tr> 
-          <th>gsr_features</th>
-          <th>rr_features</th>
-          <th>temp_features</th>
+          <th>gsr</th>
+          <th>rr</th>
+          <th>temp</th>
           <th>rest</th>
           <th>load</th>
         </tr>
