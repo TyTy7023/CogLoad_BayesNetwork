@@ -6,11 +6,11 @@
     <th>Conducted by</th>
   </tr>
   <tr>
-    <td>Dr. Nguyễn Quốc Huy</td>
+    <td>Ts. Nguyễn Quốc Huy</td>
     <td>Đỗ Minh Quân</td>
   </tr>
   <tr>
-    <td>Dr. Đỗ Như Tài</td>
+    <td>Ts. Đỗ Như Tài</td>
     <td>Lê Thị Mỹ Hương</td>
   </tr>
   <tr>
