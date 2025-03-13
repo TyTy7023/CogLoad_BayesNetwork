@@ -1,13 +1,11 @@
 # **Cog_BayesNetwork**  
 ## Authors
-- **Research Advisor**
-  + Dr. Nguyễn Quốc Huy
-  + DR. Đỗ Như Tài
-- **Conducted by**
-  + Đỗ Minh Quân
-  + Lê Thị Mỹ Hương
-  + Trần Bùi Ty Ty
-    
+| **Research Advisor**    | **Conducted by**       |
+|-------------------------|-----------------------|
+| Dr. Nguyễn Quốc Huy     | Đỗ Minh Quân          |
+| Dr. Đỗ Như Tài          | Lê Thị Mỹ Hương       |
+|                         | Trần Bùi Ty Ty        |
+
 ## **About My Data**  
 - Includes three directories (**23_objects**, **allFeatures**, **last_30s_segments**):  
   + **23_objects**: Raw data from 23 subjects recorded during data collection.  
