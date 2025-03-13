@@ -139,6 +139,37 @@ class BN:
             for node, cpd in pdt.items():
                 f.write(f"CPD của {node}:\n{cpd}\n\n")
                 print(f"CPD của {node}:\n{cpd}\n")
+                
+    def save_full_CPD(self):
+        '''
+        Xuất đầy đủ bảng CPD của Labels ra file CSV
+        '''
+        if self.best_model is None:
+            raise ValueError("Mô hình chưa được huấn luyện. Vui lòng chạy fit() trước.")
+        
+        cpd_labels = self.best_model.get_cpds("Labels")
+        
+        # Lấy danh sách các trạng thái của các biến điều kiện
+        conditions = cpd_labels.variables[1:]
+        condition_states = [cpd_labels.state_names[var] for var in conditions]
+        
+        # Tạo danh sách tất cả tổ hợp giá trị của các biến điều kiện
+        condition_combinations = list(itertools.product(*condition_states))
+    
+        # Tạo bảng dữ liệu
+        data = []
+        for idx, label_state in enumerate(cpd_labels.state_names["Labels"]):
+            row = [label_state] + list(cpd_labels.values[idx].flatten())
+            data.append(row)
+    
+        # Tạo DataFrame
+        columns = ["Labels"] + [str(comb) for comb in condition_combinations]
+        df = pd.DataFrame(data, columns=columns)
+        
+        # Lưu ra file CSV
+        df.to_csv(f"{self.path}labels_cpd.csv", index=False, encoding="utf-8")
+    
+        print(f"Bảng CPD của Labels đã được lưu đầy đủ vào {self.path}labels_cpd.csv")
 
     def predict(self, X_test, y_test):
         '''
