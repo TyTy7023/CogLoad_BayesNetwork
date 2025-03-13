@@ -47,72 +47,79 @@
 - The **CPDs quantify the probabilistic influence** of each feature on the classification outcome, allowing for interpretable decision-making and uncertainty estimation in real-world applications.  
 - The learned Bayesian Network reveals that **RR plays a central role** in the physiological relationship network, while **GSR and Temp serve as supporting features** in cognitive load classification.  
 - Comparative evaluation shows that the **Bayesian Network model achieves competitive classification performance**, while also offering the advantage of **interpretable causal relationships** over black-box machine learning models.  
-<div style="display: flex; align-items: center; gap: 20px; ">
-  <img src="img/DAG.png" alt="DAG BN" width="500" height="300"/>
-  <table>
+<table>
   <tr>
-    <th>gsr_features</th>
-    <th>rr_features</th>
-    <th>temp_features</th>
-    <th>rest</th>
-    <th>load</th>
-  </tr>
-  <tr>
-    <td>0</td>
-    <td>0</td>
-    <td>0</td>
-    <td>0.3194</td>
-    <td>0.6806</td>
-  </tr>
-   <tr>
-    <td>0</td>
-    <td>0</td>
-    <td>1</td>
-    <td>0.4310</td>
-    <td>0.5690</td>
-  </tr>  
-  <tr>
-    <td>0</td>
-    <td>1</td>
-    <td>0</td>
-    <td>0.6269</td>
-    <td>0.3731</td>
-  </tr>  
-  <tr>
-    <td>0</td>
-    <td>1</td>
-    <td>1</td>
-    <td>0.4230</td>
-    <td>0.5769</td>
-  </tr>
-    <tr>
-    <td>1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>0.4643</td>
-    <td>0.5357</td>
-  </tr>  
-  <tr>
-    <td>1</td>
-    <td>0</td>
-    <td>1</td>
-    <td>0.4461</td>
-    <td>0.5538</td>
-  </tr>
-    <tr>
-    <td>1</td>
-    <td>1</td>
-    <td>0</td>
-    <td>0.6327</td>
-    <td>0.3673</td>
-  </tr>
-    <tr>
-    <td>1</td>
-    <td>1</td>
-    <td>1</td>
-    <td>0.6122</td>
-    <td>0.3878</td>
+    <td>
+      <img src="img/DAG.png" alt="DAG BN" width="500" height="300"/>
+    </td>
+    <td>
+      <table border="1">
+        <tr>
+          <th>gsr_features</th>
+          <th>rr_features</th>
+          <th>temp_features</th>
+          <th>rest</th>
+          <th>load</th>
+        </tr>
+        <tr>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0.3194</td>
+          <td>0.6806</td>
+        </tr>
+        <tr>
+          <td>0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0.4310</td>
+          <td>0.5690</td>
+        </tr>
+        <tr>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.6269</td>
+          <td>0.3731</td>
+        </tr>
+        <tr>
+          <td>0</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0.4230</td>
+          <td>0.5769</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0.4643</td>
+          <td>0.5357</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0.4461</td>
+          <td>0.5538</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.6327</td>
+          <td>0.3673</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0.6122</td>
+          <td>0.3878</td>
+        </tr>
+      </table>
+    </td>
   </tr>
 </table>
-</div>  
+
 🚀 **Future work** will focus on improving feature selection strategies, incorporating dynamic Bayesian models, and validating the approach on larger datasets for real-world deployment.
