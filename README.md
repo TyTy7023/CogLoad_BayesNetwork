@@ -11,9 +11,11 @@
     text-align: left;
   }
   th {
-    background-color: #f2f2f2;
+    font-weight: bold;
+    background-color: #f2f2f2; /* Tùy chọn: Thêm nền nhạt để dễ nhìn */
   }
 </style>
+
 <table>
   <tr>
     <th>Research Advisor</th>
