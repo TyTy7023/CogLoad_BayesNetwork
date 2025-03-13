@@ -48,7 +48,7 @@
 - The learned Bayesian Network reveals that **RR plays a central role** in the physiological relationship network, while **GSR and Temp serve as supporting features** in cognitive load classification.  
 - Comparative evaluation shows that the **Bayesian Network model achieves competitive classification performance**, while also offering the advantage of **interpretable causal relationships** over black-box machine learning models.  
 <div style="display: flex; align-items: center; gap: 20px; ">
-  <img src="img/DAG.png" alt="DAG BN" width="500" height="300"/>
+  <img src="img/DAG.png" alt="DAG BN" width="300" height="300"/>
   <table>
   <tr>
     <th>gsr_features</th>
