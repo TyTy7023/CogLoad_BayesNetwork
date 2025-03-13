@@ -1,7 +1,7 @@
 # **Cog_BayesNetwork**  
 ## Authors
-| **Research Advisor**    | **Conducted by**       |
-|-------------------------|-----------------------|
+| **Research Advisor**    | **Conducted by**      |
+|:------------------------|:----------------------|
 | Dr. Nguyễn Quốc Huy     | Đỗ Minh Quân          |
 | Dr. Đỗ Như Tài          | Lê Thị Mỹ Hương       |
 |                         | Trần Bùi Ty Ty        |
