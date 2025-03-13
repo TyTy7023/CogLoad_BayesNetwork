@@ -1,5 +1,13 @@
 # **Cog_BayesNetwork**  
-
+## Authors
+- **Research Advisor**
+  + Dr. Nguyễn Quốc Huy
+  + DR. Đỗ Như Tài
+- **Conducted by**
+  + Đỗ Minh Quân
+  + Lê Thị Mỹ Hương
+  + Trần Bùi Ty Ty
+    
 ## **About My Data**  
 - Includes three directories (**23_objects**, **allFeatures**, **last_30s_segments**):  
   + **23_objects**: Raw data from 23 subjects recorded during data collection.  
@@ -23,3 +31,10 @@
   + **Experimentation and evaluation**: Evaluate the performance of the **Bayesian Network model** to determine its applicability in cognitive load classification.  
 
 ## **Result**  
+- The final outcome of the study is a **Bayesian Network model** along with its **Conditional Probability Distributions (CPDs)**, representing the causal relationships between physiological signals (**RR, GSR, HR, Temp**) and cognitive load states (**Rest/Load**).  
+- The learned Bayesian structure illustrates **dependencies between features**, providing insights into how different physiological signals contribute to cognitive load classification.  
+- The **CPDs quantify the probabilistic influence** of each feature on the classification outcome, allowing for interpretable decision-making and uncertainty estimation in real-world applications.  
+- The learned Bayesian Network reveals that **RR plays a central role** in the physiological relationship network, while **GSR and Temp serve as supporting features** in cognitive load classification.  
+- Comparative evaluation shows that the **Bayesian Network model achieves competitive classification performance**, while also offering the advantage of **interpretable causal relationships** over black-box machine learning models.  
+
+🚀 **Future work** will focus on improving feature selection strategies, incorporating dynamic Bayesian models, and validating the approach on larger datasets for real-world deployment.
