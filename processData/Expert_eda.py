@@ -40,40 +40,42 @@ class eda():
         self.eda_features_pyteap.to_csv(path + 'eda_features_pyteap.csv', index=False)
     
     def extract_eda_features(self):
-        """
-        Extract EDA features from EDA data
-        """
-        # EDA features to extract from neurokit2 library
-        feature_keys = [
-            'SCR_Onsets', 'SCR_Peaks', 'SCR_Height',
-            'SCR_Amplitude', 'SCR_RiseTime', 
-            'SCR_Recovery', 'SCR_RecoveryTime'
-        ]
-        
-        # Generate feature names
-        feature_names = [f"{stat}_{key}" for key in feature_keys for stat in ['min', 'max', 'mean']]
-        
-        # Process a single EDA signal and extract features 
-        def process_segment(eda_signal):
-            """
-            Process a single EDA signal and extract features.
-            """
-            resample_intervals = resample(eda_signal, int(len(eda_signal) * self.num_hz))
-            signals, info = nk.eda_process(resample_intervals, sampling_rate=self.num_hz)
-            
-            segment_features = []
-            for key in feature_keys:
-                values = np.array(info.get(key, []))  # Safely get the key or an empty array
-                values = values[~np.isnan(values)]  # Remove NaN values
-                if len(values) > 0:
-                    segment_features.extend([np.min(values), np.max(values), np.mean(values)])
-                else:
-                    segment_features.extend([0, 0, 0])  # Default to 0 if no values
-            return segment_features
+        feature_keys = ['SCR_Onsets', 'SCR_Peaks', 'SCR_Height', 'SCR_Amplitude', 'SCR_RiseTime', 'SCR_Recovery', 'SCR_RecoveryTime']
 
-        # Process all segments and construct DataFrame
-        features_arr = [process_segment(self.gsr_df.iloc[i].values) for i in range(len(self.gsr_df))]
-        return pd.DataFrame(features_arr, columns=feature_names)
+        #for each feature key we will caclulate min, max and mean values
+        feature_names = []
+        for f in feature_keys:
+            feature_names.append('min_'+f)
+            feature_names.append('max_'+f)
+            feature_names.append('mean_'+f)
+
+
+        #iterate through all 30-second segments
+        features_arr = []
+        for i in range(len(self.gsr_df)):
+            my_eda = self.gsr_df.iloc[i].dropna()
+            #Neurokit required 10Hz sampling frequency. Here we upsample the signal
+            my_eda_resampled = resample(my_eda.values,len(my_eda.values)*10)
+            # Process it
+            signals, info = nk.eda_process(my_eda_resampled, sampling_rate=10)
+
+            segment_features = []
+            for k in feature_keys:
+            #initial values are 0
+                feature_min = 0
+                feature_max = 0
+                feature_mean = 0
+
+                #drop Nan values
+                values = info[k]
+                values = values[~np.isnan(values)]
+                if len(values)>0: #update feature-values if there is at least 1 detected value (e.g., at least one peak), else leave 0
+                    feature_min = np.min(values)
+                    feature_max = np.max(values)
+                    feature_mean = np.mean(values)
+                segment_features.extend([feature_min,feature_max,feature_mean])
+            features_arr.append(segment_features)
+        return pd.DataFrame(features_arr,columns = feature_names)
     
     ''' EDA functions with PyTeAP library'''
     def expert_eda_features(self):
