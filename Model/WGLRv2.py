@@ -36,19 +36,29 @@ class WeightedLogisticRegression:
             self.individual_models[group] = model
 
     def predict_proba(self, X, group_ids):
-        X = X if isinstance(X, pd.DataFrame) else pd.DataFrame(X)
-        
-        y_global_pred = self.global_model.predict_proba(X)[:, 1]
+        """
+        Predict probabilities using weighted combination of global and individualized models.
+
+        Parameters:
+        - X: Feature matrix (2D array-like).
+        - group_ids: Group IDs for individualized models (1D array-like).
+
+        Returns:
+        - Weighted probabilities (1D array).
+        """
+        X = pd.DataFrame(X)  # Đảm bảo X là DataFrame
+        y_global_pred = self.global_model.predict_proba(X)[:, 1]  # Lấy xác suất lớp 1
         y_individual_pred = np.zeros_like(y_global_pred)
 
         for i, group in enumerate(group_ids):
             if group in self.individual_models:
-                X_row = X.iloc[i].values.reshape(1, -1)
+                X_row = X.iloc[i].values.reshape(1, -1)  # Đảm bảo giữ số feature
                 y_individual_pred[i] = self.individual_models[group].predict_proba(X_row)[:, 1]
             else:
                 y_individual_pred[i] = y_global_pred[i]
-        
+
         return self.weight * y_individual_pred + (1 - self.weight) * y_global_pred
+
 
     def optimize_weight(self, X, y, group_ids):
         X = X if isinstance(X, pd.DataFrame) else pd.DataFrame(X)
