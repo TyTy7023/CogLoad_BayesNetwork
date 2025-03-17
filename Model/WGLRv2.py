@@ -37,19 +37,24 @@ class WeightedLogisticRegression:
 
 
     def predict_proba(self, X, group_ids):
+        X = np.array(X)
+        if X.ndim == 1:
+            X = X.reshape(1, -1)  # Chuyển thành (1, 106) nếu là 1D
+        
         X = pd.DataFrame(X)  # Đảm bảo X là DataFrame
+        print("Shape of X in predict_proba:", X.shape)  # Debug
+        
         y_global_pred = self.global_model.predict_proba(X)[:, 1]  # Xác suất lớp 1
         y_individual_pred = np.zeros_like(y_global_pred)
 
         for i, group in enumerate(group_ids):
             if group in self.individual_models:
-                X_row = X.iloc[i].values.reshape(1, -1)  # Giữ nguyên số feature
+                X_row = X.iloc[i].values.reshape(1, -1)  # Chuyển thành (1, 106)
                 y_individual_pred[i] = self.individual_models[group].predict_proba(X_row)[:, 1]
             else:
                 y_individual_pred[i] = y_global_pred[i]
 
         return self.weight * y_individual_pred + (1 - self.weight) * y_global_pred
-
 
     def optimize_weight(self, X, y, group_ids):
         X = X if isinstance(X, pd.DataFrame) else pd.DataFrame(X)
