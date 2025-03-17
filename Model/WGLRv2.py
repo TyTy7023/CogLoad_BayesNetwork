@@ -58,7 +58,7 @@ class WeightedLogisticRegression:
         Returns:
         - Weighted probabilities (1D array).
         """
-        y_global_pred = self.global_model.predict_proba(X)[:, 1]
+        y_global_pred = self.global_model.predict_proba(X)
         y_individual_pred = np.zeros_like(y_global_pred)
 
         for i, group in enumerate(group_ids):

@@ -59,7 +59,7 @@ class eda():
             Process a single EDA signal and extract features.
             """
             resample_intervals = resample(eda_signal, int(len(eda_signal) * self.num_hz))
-            print(f"test resample: {resample_intervals}")
+            # print(f"test resample: {resample_intervals}")
             signals, info = nk.eda_process(resample_intervals, sampling_rate=self.num_hz)
             
             segment_features = []
