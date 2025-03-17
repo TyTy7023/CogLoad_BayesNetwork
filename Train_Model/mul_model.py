@@ -18,7 +18,7 @@ from MLP import MLP
 from TabNet import TabNet
 from E7GB import EnsembleModel_7GB
 from ESVM import ESVM
-from WGLR import WeightedRegression
+from WGLRv2 import WeightedLogisticRegression
 
 def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, n_splits=3 , debug = 0, models = ['MLP_Sklearn', 'MLP_Keras','TabNet', 'E7GB', 'ESVM', 'WGLR']):
     np.random.seed(42)
@@ -85,7 +85,7 @@ def train_model(X_train, y_train, X_test, y_test, user_train, user_test, path, n
                 y_pred_prob = estimator.predict_proba(X_val_fold)[:,1]
 
             elif model == 'WGLR':
-                estimator = WeightedRegression(weight=0.7)
+                estimator = WeightedLogisticRegression(weight=0.7)
                 estimator.fit(X_train_fold, y_train_fold, train_groups)
                 estimator.optimize_weight(X = X_train_fold,y = y_train_fold, group_ids = train_groups)
                 y_pred_prob = estimator.predict_proba(X_val_fold, val_groups)
